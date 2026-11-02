@@ -1,0 +1,218 @@
+<!doctype html>
+<html lang="uk">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<title>Junction CRM</title>
+<link rel="icon" href="img/logo.png">
+<link href="https://fonts.googleapis.com/css2?family=Russo+One&family=Manrope:wght@500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0e0620; --bg-2: #160a30; --bg-3: #1f1042; --violet: #6a1fb0; --lilac: #b996ff; --green: #2fe39a;
+  --ink: #f5f0ff; --muted: #bcaedc; --line: rgba(185,150,255,.16); --red: #ff8fa6;
+  --font-display: "Russo One", "Arial Black", system-ui, sans-serif;
+  --font-body: "Manrope", "Segoe UI", system-ui, sans-serif;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+[hidden] { display: none !important; }
+body { margin: 0; background: var(--bg); color: var(--ink); font: 500 15px/1.5 var(--font-body); }
+.wrap { max-width: 1400px; margin: 0 auto; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+header { border-bottom: 1px solid var(--line); background: var(--bg-2); }
+header .wrap { display: flex; align-items: center; gap: 14px; min-height: 64px; flex-wrap: wrap; padding-block: 10px; }
+header img { width: 32px; height: 32px; border-radius: 8px; }
+h1 { font: 400 20px/1 var(--font-display); margin: 0; }
+.spacer { flex: 1; }
+button, .btn { font: 700 14px/1 var(--font-body); border: 0; border-radius: 999px; padding: 11px 16px; cursor: pointer; background: var(--bg-3); color: var(--ink); }
+button.main { background: var(--green); color: #07130e; }
+button:disabled { opacity: .6; cursor: default; }
+:focus-visible { outline: 3px solid var(--green); outline-offset: 2px; }
+.muted { color: var(--muted); }
+
+/* login */
+.login { max-width: 380px; margin: 12vh auto 0; background: var(--bg-2); border: 1px solid var(--line); border-radius: 20px; padding: 28px; display: grid; gap: 14px; }
+.login h2 { font: 400 24px/1.1 var(--font-display); margin: 0; }
+input, select, textarea { width: 100%; font: 500 15px/1.4 var(--font-body); color: var(--ink); background: var(--bg); border: 1.5px solid var(--line); border-radius: 10px; padding: 10px 12px; }
+input:focus, select:focus, textarea:focus { outline: none; border-color: var(--lilac); }
+.err { color: var(--red); font-size: 14px; min-height: 1.4em; margin: 0; }
+
+/* summary */
+.summary { display: flex; flex-wrap: wrap; gap: 8px; padding-block: 18px; }
+.chip { display: inline-flex; align-items: center; gap: 8px; padding: 8px 12px; border-radius: 999px; border: 1px solid var(--line); background: var(--bg-2); font-weight: 700; font-size: 13.5px; cursor: pointer; }
+.chip b { font-variant-numeric: tabular-nums; color: var(--green); }
+.chip[aria-pressed="true"] { border-color: var(--green); background: rgba(47,227,154,.12); }
+.search { max-width: 280px; }
+
+/* board */
+.board { display: grid; grid-template-columns: repeat(6, minmax(240px, 1fr)); gap: 12px; overflow-x: auto; padding-bottom: 28px; align-items: start; }
+.col { background: var(--bg-2); border: 1px solid var(--line); border-radius: 16px; padding: 10px; display: grid; gap: 10px; min-width: 0; }
+.col h3 { margin: 4px 6px; font: 800 13px/1 var(--font-body); letter-spacing: .08em; text-transform: uppercase; color: var(--muted); display: flex; justify-content: space-between; }
+.col h3 b { color: var(--ink); font-variant-numeric: tabular-nums; }
+.col[data-s="Нова"] h3 { color: var(--green); }
+.col[data-s="Клієнт"] h3 { color: var(--green); }
+.col[data-s="Відмова"] h3 { color: var(--red); }
+.card { background: var(--bg-3); border: 1px solid var(--line); border-radius: 12px; padding: 12px; display: grid; gap: 8px; min-width: 0; }
+.card .top { display: flex; justify-content: space-between; gap: 8px; align-items: baseline; }
+.card .name { font-weight: 800; font-size: 15.5px; overflow-wrap: anywhere; }
+.card .date { color: var(--muted); font-size: 12px; white-space: nowrap; font-variant-numeric: tabular-nums; }
+.card .biz { color: var(--lilac); font-weight: 700; overflow-wrap: anywhere; }
+.card dl { margin: 0; display: grid; grid-template-columns: auto 1fr; gap: 3px 8px; font-size: 13px; }
+.card dt { color: var(--muted); }
+.card dd { margin: 0; overflow-wrap: anywhere; }
+.card a { color: var(--green); }
+.card .pain { font-size: 13px; background: rgba(0,0,0,.2); border-radius: 8px; padding: 8px; overflow-wrap: anywhere; }
+.card textarea { min-height: 54px; font-size: 13.5px; resize: vertical; }
+.card .saved { font-size: 12px; color: var(--green); min-height: 1em; }
+.empty { color: var(--muted); font-size: 13px; padding: 6px; }
+@media (max-width: 760px) { .board { grid-template-columns: 1fr; overflow-x: visible; } }
+</style>
+</head>
+<body>
+<header>
+  <div class="wrap">
+    <img src="img/logo.png" alt="">
+    <h1>Junction CRM</h1>
+    <span class="muted" id="updated"></span>
+    <span class="spacer"></span>
+    <input class="search" id="search" type="search" placeholder="Пошук: ім'я, бізнес, контакт" hidden>
+    <button id="refresh" hidden>Оновити</button>
+    <button id="logout" hidden>Вийти</button>
+  </div>
+</header>
+
+<main class="wrap">
+  <form class="login" id="login">
+    <h2>Вхід у CRM</h2>
+    <p class="muted">Пароль — це CRM_KEY із властивостей Apps Script.</p>
+    <label for="pass" class="muted">Пароль</label>
+    <input id="pass" type="password" autocomplete="current-password" required>
+    <button class="main" type="submit">Увійти</button>
+    <p class="err" id="loginErr" role="alert"></p>
+  </form>
+
+  <div id="app" hidden>
+    <div class="summary" id="summary"></div>
+    <div class="board" id="board"></div>
+  </div>
+</main>
+
+<script src="config.js"></script>
+<script>
+(function () {
+  var API = window.JUNCTION_ENDPOINT || "";
+  var KEY = ""; try { KEY = sessionStorage.getItem("jcrm") || ""; } catch (e) {}
+  var STATUSES = ["Нова", "Зв'язались", "Розбір", "Пропозиція", "Клієнт", "Відмова"];
+  var leads = [], filter = "", query = "";
+  var $ = function (id) { return document.getElementById(id); };
+
+  function call(params) {
+    var q = new URLSearchParams(params); q.set("key", KEY);
+    return fetch(API + "?" + q.toString()).then(function (r) { return r.json(); });
+  }
+  function esc(s) { return String(s == null ? "" : s).replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; }); }
+  function contactLink(c) {
+    c = String(c || "").trim();
+    if (/^@[\w.]{3,}$/.test(c)) return '<a href="https://t.me/' + esc(c.slice(1)) + '" target="_blank" rel="noopener">' + esc(c) + "</a>";
+    if (/^\+?[\d\s()-]{9,}$/.test(c)) return esc(c);
+    return esc(c);
+  }
+  function siteLink(l) {
+    l = String(l || "").trim(); if (!l) return "—";
+    if (/^@[\w.]{2,}$/.test(l)) return '<a href="https://www.instagram.com/' + esc(l.slice(1)) + '/" target="_blank" rel="noopener">' + esc(l) + "</a>";
+    if (/^https?:\/\//.test(l)) return '<a href="' + esc(l) + '" target="_blank" rel="noopener">' + esc(l.replace(/^https?:\/\//, "")) + "</a>";
+    return esc(l);
+  }
+  function fmtDate(iso) {
+    var d = new Date(iso); if (isNaN(d)) return esc(iso);
+    return d.toLocaleDateString("uk-UA", { day: "2-digit", month: "2-digit" }) + " " + d.toLocaleTimeString("uk-UA", { hour: "2-digit", minute: "2-digit" });
+  }
+
+  function load() {
+    if (!API) { showLogin("Не вказано адресу Apps Script у config.js."); return; }
+    $("refresh").disabled = true;
+    call({ action: "list" }).then(function (r) {
+      if (!r.ok) { showLogin(r.error === "auth" ? "Неправильний пароль." : "Помилка: " + r.error); return; }
+      leads = r.leads; if (r.statuses) STATUSES = r.statuses;
+      showApp(); render();
+      $("updated").textContent = "· оновлено " + new Date().toLocaleTimeString("uk-UA", { hour: "2-digit", minute: "2-digit" });
+    }).catch(function () { showLogin("Не вдалося з'єднатися з Apps Script. Перевір адресу в config.js."); })
+      .finally(function () { $("refresh").disabled = false; });
+  }
+  function showLogin(msg) {
+    $("login").hidden = false; $("app").hidden = true; ["search", "refresh", "logout"].forEach(function (i) { $(i).hidden = true; });
+    $("loginErr").textContent = msg || "";
+  }
+  function showApp() {
+    $("login").hidden = true; $("app").hidden = false; ["search", "refresh", "logout"].forEach(function (i) { $(i).hidden = false; });
+  }
+
+  function render() {
+    var q = query.toLowerCase();
+    var shown = leads.filter(function (l) {
+      return !q || [l.name, l.business, l.contact, l.link, l.utm].join(" ").toLowerCase().indexOf(q) >= 0;
+    });
+    // summary chips double as filters
+    var counts = {}; STATUSES.forEach(function (s) { counts[s] = 0; }); shown.forEach(function (l) { counts[l.status] = (counts[l.status] || 0) + 1; });
+    var won = counts["Клієнт"] || 0, total = shown.length;
+    $("summary").innerHTML = '<button class="chip" data-f="" aria-pressed="' + (filter === "") + '">Усі <b>' + total + "</b></button>" +
+      STATUSES.map(function (s) { return '<button class="chip" data-f="' + esc(s) + '" aria-pressed="' + (filter === s) + '">' + esc(s) + " <b>" + counts[s] + "</b></button>"; }).join("") +
+      '<span class="chip" style="cursor:default">Конверсія в клієнта <b>' + (total ? Math.round(won / total * 100) : 0) + "%</b></span>";
+
+    var cols = filter ? [filter] : STATUSES;
+    $("board").style.gridTemplateColumns = filter ? "minmax(0, 520px)" : "";
+    $("board").innerHTML = cols.map(function (s) {
+      var items = shown.filter(function (l) { return l.status === s; });
+      return '<section class="col" data-s="' + esc(s) + '"><h3>' + esc(s) + " <b>" + items.length + "</b></h3>" +
+        (items.length ? items.map(card).join("") : '<p class="empty">Порожньо</p>') + "</section>";
+    }).join("");
+  }
+  function card(l) {
+    return '<article class="card" data-id="' + esc(l.id) + '">' +
+      '<div class="top"><span class="name">' + esc(l.name) + '</span><span class="date">' + fmtDate(l.date) + "</span></div>" +
+      '<div class="biz">' + esc(l.business || "—") + "</div>" +
+      "<dl><dt>Контакт</dt><dd>" + contactLink(l.contact) + "</dd><dt>Профіль</dt><dd>" + siteLink(l.link) + "</dd>" +
+      "<dt>Послуга</dt><dd>" + esc(l.service || "—") + "</dd><dt>Джерело</dt><dd>" + esc(l.utm || "direct") + "</dd></dl>" +
+      (l.pain ? '<div class="pain">' + esc(l.pain) + "</div>" : "") +
+      '<label class="muted" for="st-' + esc(l.id) + '">Статус</label><select id="st-' + esc(l.id) + '" data-act="status">' +
+      STATUSES.map(function (s) { return "<option" + (s === l.status ? " selected" : "") + ">" + esc(s) + "</option>"; }).join("") + "</select>" +
+      '<textarea id="cm-' + esc(l.id) + '" data-act="comment" placeholder="Коментар: про що домовились, коли написати">' + esc(l.comment) + "</textarea>" +
+      '<span class="saved" aria-live="polite"></span></article>';
+  }
+  function save(el, params) {
+    var cardEl = el.closest(".card"), id = cardEl.dataset.id, note = cardEl.querySelector(".saved");
+    note.textContent = "Зберігаю…";
+    params.action = "update"; params.id = id;
+    return call(params).then(function (r) {
+      if (!r.ok) throw new Error(r.error);
+      var l = leads.find(function (x) { return x.id === id; });
+      if (params.status) l.status = params.status;
+      if (params.comment !== undefined) l.comment = params.comment;
+      note.textContent = "Збережено";
+      return true;
+    }).catch(function () { note.textContent = "Не збереглося, спробуй ще раз"; note.style.color = "var(--red)"; });
+  }
+
+  $("summary").addEventListener("click", function (e) { var b = e.target.closest("[data-f]"); if (!b) return; filter = b.dataset.f; render(); });
+  $("board").addEventListener("change", function (e) {
+    if (e.target.dataset.act === "status") save(e.target, { status: e.target.value }).then(function (ok) { if (ok) setTimeout(render, 400); });
+  });
+  $("board").addEventListener("blur", function (e) {
+    if (e.target.dataset.act !== "comment") return;
+    var l = leads.find(function (x) { return x.id === e.target.closest(".card").dataset.id; });
+    if (l && e.target.value !== String(l.comment || "")) save(e.target, { comment: e.target.value });
+  }, true);
+  $("search").addEventListener("input", function (e) { query = e.target.value; render(); });
+  $("refresh").addEventListener("click", load);
+  $("logout").addEventListener("click", function () { KEY = ""; try { sessionStorage.removeItem("jcrm"); } catch (e) {} showLogin(); });
+  $("login").addEventListener("submit", function (e) {
+    e.preventDefault(); KEY = $("pass").value.trim();
+    try { sessionStorage.setItem("jcrm", KEY); } catch (err) {}
+    $("loginErr").textContent = ""; load();
+  });
+
+  if (KEY) load(); else showLogin();
+})();
+</script>
+</body>
+</html>
