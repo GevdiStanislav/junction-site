@@ -1,66 +1,669 @@
 <!doctype html>
 <html lang="uk">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Junction — креативи, що продають</title>
-  <meta name="description" content="Junction — маркетингова агенція та академія. Креативи для бізнесу й практика для новачків.">
-  <link rel="icon" href="logo.png">
-  <link rel="stylesheet" href="style.css">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<link rel="icon" href="img/logo.png">
+<title>Junction Agency</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="description" content="Junction Agency — сайти, креативи й реклама, що приводять клієнтів.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Russo+One&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+/* Layout: one dark violet world. Bold Russo One headlines on the left, the brand's 3D crossing on the right;
+   sections alternate deep violet and a saturated purple band; green is reserved for results, numbers and the main action. */
+:root {
+  --bg: #0e0620;          /* deep violet night */
+  --bg-2: #160a30;        /* raised panels */
+  --violet: #6a1fb0;      /* brand purple */
+  --indigo: #4b0082;      /* brand indigo */
+  --lilac: #b996ff;       /* soft accent text */
+  --green: #2fe39a;       /* results, numbers, main CTA */
+  --ink: #f5f0ff;         /* main text */
+  --muted: #bcaedc;       /* secondary text */
+  --line: rgba(185, 150, 255, .16);
+  --font-display: "Russo One", "Arial Black", Impact, system-ui, sans-serif;
+  --font-body: "Manrope", "Segoe UI", system-ui, -apple-system, sans-serif;
+  --r: 18px;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  margin: 0; background: var(--bg); color: var(--ink);
+  font: 500 16px/1.6 var(--font-body);
+  -webkit-font-smoothing: antialiased; overflow-x: hidden;
+}
+a { color: inherit; }
+img { max-width: 100%; display: block; }
+h1, h2, h3 { font-family: var(--font-display); font-weight: 400; line-height: 1.08; margin: 0; text-wrap: balance; letter-spacing: .005em; }
+h2 { font-size: clamp(30px, 4.6vw, 52px); }
+h3 { font-size: 20px; line-height: 1.2; }
+p { margin: 0; }
+.wrap { width: 100%; max-width: 1180px; margin: 0 auto;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+section { padding-block: clamp(64px, 9vw, 120px); }
+.eyebrow { font: 700 12px/1 var(--font-body); letter-spacing: .16em; text-transform: uppercase; color: var(--green); }
+.sec-head { display: grid; gap: 14px; max-width: 760px; margin-bottom: 44px; }
+.sec-head p { color: var(--muted); font-size: 18px; max-width: 62ch; }
+:focus-visible { outline: 3px solid var(--green); outline-offset: 3px; border-radius: 6px; }
+
+/* buttons */
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: 10px; min-height: 52px; padding: 0 26px;
+  border-radius: 999px; font: 800 16px/1 var(--font-body); text-decoration: none; border: 0; cursor: pointer;
+  transition: transform .2s ease, box-shadow .2s ease, background .2s ease; }
+.btn-main { background: var(--green); color: #07130e; box-shadow: 0 10px 40px -10px rgba(47,227,154,.7); }
+.btn-main:hover { transform: translateY(-2px); box-shadow: 0 16px 50px -10px rgba(47,227,154,.85); }
+.btn-ghost { background: transparent; color: var(--ink); box-shadow: inset 0 0 0 2px var(--line); }
+.btn-ghost:hover { box-shadow: inset 0 0 0 2px var(--lilac); }
+.btn .arr { transition: transform .2s ease; }
+.btn:hover .arr { transform: translateX(4px); }
+
+/* header */
+body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 30; background: var(--bg); }
+.top { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 20; background: rgba(14,6,32,.78);
+  backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); border-bottom: 1px solid var(--line); }
+.top .wrap { display: flex; align-items: center; gap: 24px; min-height: 68px; }
+.brand { display: flex; align-items: center; gap: 12px; text-decoration: none; min-width: 0; }
+.brand img { width: 38px; height: 38px; border-radius: 10px; }
+.brand b { font: 400 18px/1 var(--font-display); display: block; }
+.brand small { display: block; color: var(--muted); font-size: 11.5px; line-height: 1.3; margin-top: 3px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.top nav { margin-left: auto; display: flex; gap: 22px; align-items: center; }
+.top nav a { text-decoration: none; color: var(--muted); font-weight: 700; font-size: 14.5px; }
+.top nav a:hover { color: var(--ink); }
+.top nav a.btn-main, .top nav a.btn-main:hover { color: #07130e; }
+.top .btn { min-height: 42px; padding: 0 18px; font-size: 14.5px; }
+@media (max-width: 960px) { .top nav a:not(.btn) { display: none; } }
+.top .short { display: none; }
+@media (max-width: 520px) { .top .long { display: none; } .top .short { display: inline; } .brand small { display: none; } .top .btn { padding: 0 14px; font-size: 13.5px; } }
+
+/* hero */
+.hero { position: relative; padding-block: clamp(28px, 5vw, 64px) clamp(40px, 6vw, 80px); overflow: hidden; }
+.hero::after { content: ""; position: absolute; inset: -20% -10% auto auto; width: 70vw; height: 70vw; max-width: 900px; max-height: 900px;
+  background: radial-gradient(closest-side, rgba(106,31,176,.55), rgba(106,31,176,0)); pointer-events: none; z-index: 0; }
+.hero .wrap { position: relative; z-index: 1; display: grid; grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr); gap: 24px; align-items: center; }
+.hero-text { display: grid; gap: 24px; min-width: 0; }
+.hero h1 { font-size: clamp(42px, 6.6vw, 84px); line-height: 1.02; }
+.hero h1 em { font-style: normal; color: var(--green); }
+.hero .lead { font-size: clamp(17px, 1.6vw, 20px); color: var(--muted); max-width: 54ch; }
+.hero .cta { display: flex; flex-wrap: wrap; gap: 12px; }
+.hero .note { color: var(--muted); font-size: 14px; display: flex; align-items: center; gap: 8px; }
+.hero .note::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: var(--green); box-shadow: 0 0 12px var(--green); }
+.stage { position: relative; aspect-ratio: 1 / 1; max-width: 100%; min-width: 0; }
+.stage canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+.node-label { position: absolute; left: 0; top: 0; transform: translate(-50%, -50%); pointer-events: none; white-space: nowrap;
+  font: 700 13px/1 var(--font-body); letter-spacing: .04em; padding: 8px 12px; border-radius: 999px;
+  background: rgba(22,10,48,.82); border: 1px solid var(--line); color: var(--ink); }
+.node-label i { font-style: normal; color: var(--green); margin-right: 6px; }
+.stage-fallback { position: absolute; inset: 12%; background: url("img/logo.png") center / contain no-repeat; border-radius: 30px; opacity: .9; }
+.stage.ready .stage-fallback { display: none; }
+@media (max-width: 860px) {
+  .hero .wrap { grid-template-columns: 1fr; }
+  .stage { order: -1; max-width: 460px; width: 100%; margin: 0 auto; aspect-ratio: 5 / 4; }
+}
+
+/* ticker */
+.ticker { border-block: 1px solid var(--line); overflow: hidden; padding-block: 18px; background: var(--bg-2); }
+.ticker-row { display: flex; gap: 40px; width: max-content; animation: tick 32s linear infinite; }
+.ticker span { font: 400 clamp(20px, 2.6vw, 30px)/1 var(--font-display); color: var(--ink); white-space: nowrap; display: flex; align-items: center; gap: 40px; }
+.ticker span::after { content: ""; width: 12px; height: 12px; border-radius: 50%; background: var(--green); }
+.ticker span:nth-child(even) { color: var(--lilac); }
+@keyframes tick { to { transform: translateX(-50%); } }
+
+/* pains */
+.pains { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px; }
+.pain { padding: 28px; border-radius: var(--r); background: var(--bg-2); border: 1px solid var(--line); display: grid; gap: 12px; align-content: start; }
+.pain q { font: 400 22px/1.2 var(--font-display); quotes: "«" "»"; }
+.pain p { color: var(--muted); }
+@media (max-width: 760px) { .pains { grid-template-columns: 1fr; } }
+.pains-answer { margin-top: 28px; font-size: 19px; max-width: 70ch; }
+.pains-answer b { color: var(--green); }
+
+/* services: one band of saturated purple */
+.band { background: linear-gradient(160deg, var(--violet) 0%, var(--indigo) 100%); }
+.band .eyebrow { color: #c9ffe6; }
+.band .sec-head p { color: #e6d9ff; }
+.services { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 16px; }
+.svc { grid-column: span 2; background: rgba(14,6,32,.32); border: 1px solid rgba(255,255,255,.14); border-radius: var(--r); padding: 26px;
+  display: grid; gap: 12px; align-content: start; transition: transform .25s ease, background .25s ease; }
+.svc:hover { transform: translateY(-4px); background: rgba(14,6,32,.5); }
+.svc:nth-child(4), .svc:nth-child(5) { grid-column: span 3; }
+.svc .ico { width: 46px; height: 46px; border-radius: 14px; display: grid; place-items: center; background: rgba(47,227,154,.16); color: var(--green); }
+.svc p { color: #e6d9ff; }
+.svc ul { margin: 0; padding: 0; list-style: none; display: flex; flex-wrap: wrap; gap: 8px; }
+.svc li { font-size: 13px; font-weight: 700; padding: 5px 10px; border-radius: 999px; background: rgba(255,255,255,.1); }
+@media (max-width: 900px) { .services { grid-template-columns: 1fr 1fr; } .svc, .svc:nth-child(4), .svc:nth-child(5) { grid-column: span 1; } .svc:last-child { grid-column: 1 / -1; } }
+@media (max-width: 560px) { .services { grid-template-columns: 1fr; } .svc:last-child { grid-column: auto; } }
+
+/* who */
+.who { display: grid; grid-template-columns: 1.3fr 1fr 1fr; gap: 18px; }
+.who article { border-radius: var(--r); padding: 28px; border: 1px solid var(--line); display: grid; gap: 10px; align-content: start; }
+.who article:first-child { background: radial-gradient(120% 120% at 0% 0%, rgba(47,227,154,.18), transparent 60%), var(--bg-2); border-color: rgba(47,227,154,.35); }
+.who .tag { justify-self: start; font-size: 12px; font-weight: 800; color: #07130e; background: var(--green); padding: 4px 10px; border-radius: 999px; }
+.who p { color: var(--muted); }
+@media (max-width: 860px) { .who { grid-template-columns: 1fr; } }
+
+/* process */
+.steps { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 0; counter-reset: s; position: relative; }
+.steps li { counter-increment: s; padding: 0 20px 0 0; display: grid; gap: 10px; align-content: start; position: relative; }
+.steps li::before { content: counter(s); font: 400 64px/1 var(--font-display); color: transparent; -webkit-text-stroke: 1.5px var(--lilac); }
+.steps li::after { content: ""; position: absolute; top: 32px; left: 64px; right: 12px; height: 2px; background: linear-gradient(90deg, var(--lilac), transparent); opacity: .5; }
+.steps li:last-child::after { display: none; }
+.steps .time { font-size: 13px; font-weight: 800; color: var(--green); letter-spacing: .04em; text-transform: uppercase; }
+.steps p { color: var(--muted); }
+@media (max-width: 860px) { .steps { grid-template-columns: 1fr 1fr; row-gap: 36px; } .steps li::after { display: none; } }
+@media (max-width: 480px) { .steps { grid-template-columns: 1fr; } }
+
+/* work */
+.work { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px; }
+.work figure { aspect-ratio: 5 / 3; margin: 0; border-radius: 14px; overflow: hidden; background: #fbf3ea; border: 1px solid var(--line); transition: transform .25s ease; }
+.work figure:hover { transform: translateY(-4px) rotate(-.4deg); }
+.work img { width: 100%; height: 100%; object-fit: cover; }
+.work-note { margin-top: 18px; color: var(--muted); font-size: 15px; }
+@media (max-width: 900px) { .work { grid-template-columns: 1fr 1fr; } }
+
+/* why + funnel */
+.why { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; }
+.why article { padding: 26px; border-radius: var(--r); background: var(--bg-2); border: 1px solid var(--line); display: grid; gap: 10px; align-content: start; }
+.why p { color: var(--muted); }
+.funnel { margin-top: 22px; display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.funnel span { font: 700 13.5px/1 var(--font-body); padding: 10px 14px; border-radius: 10px; background: rgba(185,150,255,.12); border: 1px solid var(--line); font-variant-numeric: tabular-nums; }
+.funnel span b { color: var(--green); margin-left: 6px; }
+.funnel .to { color: var(--lilac); background: none; border: 0; padding: 0 2px; }
+@media (max-width: 720px) { .why { grid-template-columns: 1fr; } }
+
+/* prices: a price list, not a wall of cards */
+.prices { border-top: 1px solid var(--line); }
+.price { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, 1.6fr) auto; gap: 24px; align-items: baseline; padding: 22px 4px; border-bottom: 1px solid var(--line); }
+.price h3 { font-size: 21px; }
+.price p { color: var(--muted); }
+.price .sum { font: 400 22px/1.1 var(--font-display); white-space: nowrap; text-align: right; font-variant-numeric: tabular-nums; }
+.price .sum small { display: block; font: 600 12.5px/1.3 var(--font-body); color: var(--muted); }
+.price.hot { margin-top: 10px; border: 2px solid var(--green); border-radius: var(--r); padding: 26px 22px;
+  background: radial-gradient(100% 140% at 100% 0%, rgba(47,227,154,.16), transparent 60%), var(--bg-2); }
+.price.hot .sum { color: var(--green); }
+.price.hot .badge { display: inline-block; margin-left: 10px; vertical-align: middle; font: 800 11.5px/1 var(--font-body); color: #07130e; background: var(--green); padding: 5px 9px; border-radius: 999px; }
+.price-rules { margin-top: 26px; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
+.price-rules div { padding: 18px; border-radius: 14px; border: 1px dashed var(--line); color: var(--muted); font-size: 15px; }
+.price-rules b { color: var(--ink); display: block; margin-bottom: 4px; }
+@media (max-width: 760px) {
+  .price { grid-template-columns: 1fr auto; gap: 6px 16px; }
+  .price p { grid-column: 1 / -1; grid-row: 2; }
+  .price-rules { grid-template-columns: 1fr; }
+}
+
+/* form */
+.lead-sec .wrap { display: grid; grid-template-columns: minmax(0, .9fr) minmax(0, 1.1fr); gap: clamp(28px, 5vw, 64px); align-items: start; }
+.lead-sec .side { display: grid; gap: 18px; }
+.lead-sec .side p { color: var(--muted); font-size: 18px; }
+.gets { list-style: none; margin: 8px 0 0; padding: 0; display: grid; gap: 10px; }
+.gets li { display: flex; gap: 12px; align-items: baseline; }
+.gets li::before { content: "✓"; color: var(--green); font-weight: 800; }
+form { background: var(--bg-2); border: 1px solid var(--line); border-radius: 24px; padding: clamp(20px, 3vw, 32px); display: grid; gap: 16px; }
+.row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+label { display: grid; gap: 7px; font-weight: 700; font-size: 14px; min-width: 0; }
+label span.opt { color: var(--muted); font-weight: 500; }
+input, select, textarea { width: 100%; font: 500 16px/1.4 var(--font-body); color: var(--ink); background: var(--bg); border: 1.5px solid var(--line);
+  border-radius: 12px; padding: 13px 14px; transition: border-color .2s ease; }
+input:focus, select:focus, textarea:focus { outline: none; border-color: var(--lilac); }
+textarea { resize: vertical; min-height: 96px; }
+form .btn { width: 100%; margin-top: 4px; }
+.form-msg { font-size: 14.5px; color: var(--muted); min-height: 1.4em; }
+.form-msg.ok { color: var(--green); }
+.form-msg.err { color: #ff9db0; }
+.consent { font-size: 12.5px; color: var(--muted); font-weight: 500; }
+@media (max-width: 860px) { .lead-sec .wrap { grid-template-columns: 1fr; } }
+@media (max-width: 520px) { .row2 { grid-template-columns: 1fr; } }
+
+/* faq */
+.faq { display: grid; gap: 10px; max-width: 860px; }
+details { border: 1px solid var(--line); border-radius: 14px; background: var(--bg-2); }
+summary { cursor: pointer; list-style: none; padding: 20px 22px; font-weight: 800; font-size: 17px; display: flex; justify-content: space-between; gap: 16px; }
+summary::-webkit-details-marker { display: none; }
+summary::after { content: "+"; font: 400 24px/1 var(--font-display); color: var(--green); transition: transform .2s ease; }
+details[open] summary::after { transform: rotate(45deg); }
+details p { padding: 0 22px 20px; color: var(--muted); max-width: 70ch; }
+
+/* footer */
+footer { border-top: 1px solid var(--line); padding-block: 40px; }
+footer .wrap { display: flex; flex-wrap: wrap; gap: 20px 40px; align-items: center; justify-content: space-between; }
+footer nav { display: flex; flex-wrap: wrap; gap: 18px; }
+footer a { color: var(--muted); text-decoration: none; font-weight: 700; }
+footer a:hover { color: var(--ink); }
+footer small { color: var(--muted); }
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  .ticker-row { animation: none; }
+  .svc, .work figure, .btn, .btn .arr { transition: none; }
+}
+</style>
 </head>
 <body>
-  <header class="top">
-    <a class="brand" href="#"><img src="logo.png" alt="" width="36" height="36"><span>Junction</span></a>
-    <nav>
-      <a href="#послуги">Послуги</a>
-      <a href="#як">Як працюємо</a>
-      <a href="#академія">Академія</a>
-      <a class="btn small" href="#контакт">Написати</a>
+<header class="top">
+  <div class="wrap">
+    <a class="brand" href="#top" aria-label="Junction Agency — на початок">
+      <img src="img/logo.png" alt="" width="38" height="38">
+      <span><b>Junction Agency</b><small>сайти, креативи й реклама, що приводять клієнтів</small></span>
+    </a>
+    <nav aria-label="Розділи">
+      <a href="#services">Послуги</a>
+      <a href="#process">Як працюємо</a>
+      <a href="#work">Роботи</a>
+      <a href="#prices">Ціни</a>
+      <a href="#faq">Питання</a>
+      <a class="btn btn-main" href="#lead"><span class="long">Безкоштовний розбір</span><span class="short">Розбір</span></a>
     </nav>
-  </header>
+  </div>
+</header>
 
-  <main>
-    <section class="hero">
-      <p class="tag">Агенція + академія</p>
-      <h1>Креативи, що <span>продають</span>.<br>Команда, що росте.</h1>
-      <p class="lead">Допомагаємо бізнесу зупиняти скрол і отримувати заявки. А новачкам даємо справжню практику, ментора й портфоліо.</p>
-      <div class="cta">
-        <a class="btn" href="#контакт">Обговорити проєкт</a>
-        <a class="btn ghost" href="#академія">Я хочу вчитись</a>
+<main id="top">
+  <section class="hero">
+    <div class="wrap">
+      <div class="hero-text">
+        <p class="eyebrow">Junction Agency</p>
+        <h1>Більше клієнтів для вашого <em>бізнесу</em></h1>
+        <p class="lead">Робимо все, що стоїть між вашим продуктом і заявкою: сайт, контент, рекламні креативи й запуск реклами в Meta. Результат рахуємо в заявках і їхній ціні, а не в лайках.</p>
+        <div class="cta">
+          <a class="btn btn-main" href="#lead">Отримати безкоштовний розбір <span class="arr" aria-hidden="true">→</span></a>
+          <a class="btn btn-ghost" href="#prices">Подивитись ціни</a>
+        </div>
+        <p class="note">Розбір вашого Instagram, сайту й реклами — безкоштовно</p>
       </div>
-    </section>
-
-    <section id="послуги">
-      <h2>Що робимо для бізнесу</h2>
-      <div class="grid">
-        <article><h3>Каруселі</h3><p>Сторінки для Instagram, які тримають увагу до останнього слайда і підводять до дії.</p></article>
-        <article><h3>Reels і хуки</h3><p>Сценарій, перші 3 секунди, монтаж. Усе, щоб людина не гортала далі.</p></article>
-        <article><h3>Креативи для реклами</h3><p>Варіанти для тестів у Meta Ads: різні хуки, офери та формати.</p></article>
+      <div class="stage" id="stage" aria-hidden="true">
+        <div class="stage-fallback"></div>
+        <canvas id="hero3d"></canvas>
+        <span class="node-label" data-node="0"><i>●</i>Сайт</span>
+        <span class="node-label" data-node="1"><i>●</i>Креатив</span>
+        <span class="node-label" data-node="2"><i>●</i>Реклама</span>
       </div>
-    </section>
+    </div>
+  </section>
 
-    <section id="як">
-      <h2>Як ми працюємо</h2>
+  <div class="ticker" aria-hidden="true">
+    <div class="ticker-row">
+      <span>Сайти</span><span>Каруселі</span><span>Reels</span><span>UGC</span><span>Рекламні креативи</span><span>Meta Ads</span><span>Звіти по заявках</span>
+      <span>Сайти</span><span>Каруселі</span><span>Reels</span><span>UGC</span><span>Рекламні креативи</span><span>Meta Ads</span><span>Звіти по заявках</span>
+    </div>
+  </div>
+
+  <section id="pains">
+    <div class="wrap">
+      <div class="sec-head">
+        <p class="eyebrow">Знайомо?</p>
+        <h2>Маркетинг є, а клієнтів більше не стає</h2>
+      </div>
+      <div class="pains">
+        <div class="pain"><q>Постимо регулярно, а заявок немає</q><p>Контент збирає лайки, але не веде людину до запису чи покупки.</p></div>
+        <div class="pain"><q>Реклама крутиться, але що вона дає?</q><p>Гроші списуються, а скільки заявок принесло кожне оголошення, ніхто не знає.</p></div>
+        <div class="pain"><q>Люди заходять на сайт і йдуть</q><p>Сторінка не відповідає на питання клієнта й не дає простого способу залишити заявку.</p></div>
+      </div>
+      <p class="pains-answer">Ми з'єднуємо ці частини в одну систему: <b>креатив зупиняє</b>, <b>сайт переконує</b>, <b>реклама приводить</b>, а звіт показує, що спрацювало.</p>
+    </div>
+  </section>
+
+  <section id="services" class="band">
+    <div class="wrap">
+      <div class="sec-head">
+        <p class="eyebrow">Послуги</p>
+        <h2>Беріть одну послугу або все разом</h2>
+        <p>Кожну частину можна замовити окремо. Разом вони працюють сильніше, тому комплекс дешевший.</p>
+      </div>
+      <div class="services">
+        <article class="svc">
+          <div class="ico"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 9h18M8 14h5"/></svg></div>
+          <h3>Сайти й лендінги</h3>
+          <p>Сторінка, яка пояснює цінність і збирає заявки. З формою, пікселем і аналітикою з першого дня.</p>
+          <ul><li>Лендінг</li><li>Форма + CRM</li><li>Піксель, GA4</li></ul>
+        </article>
+        <article class="svc">
+          <div class="ico"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="8" height="8" rx="1.5"/><rect x="13" y="3" width="8" height="8" rx="1.5"/><rect x="3" y="13" width="8" height="8" rx="1.5"/><rect x="13" y="13" width="8" height="8" rx="1.5"/></svg></div>
+          <h3>Контент</h3>
+          <p>Каруселі й Reels, які зберігають і пересилають. Теми беремо з реальних питань і страхів ваших клієнтів.</p>
+          <ul><li>Каруселі</li><li>Reels</li><li>Сценарії</li></ul>
+        </article>
+        <article class="svc">
+          <div class="ico"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 10l5-3v10l-5-3"/><rect x="3" y="6" width="12" height="12" rx="2"/></svg></div>
+          <h3>Рекламні креативи</h3>
+          <p>Ролики для реклами з кількома варіантами перших секунд. Так тест швидко показує, який хук зупиняє людей.</p>
+          <ul><li>Монтаж</li><li>UGC-зйомка</li><li>Варіації хуків</li></ul>
+        </article>
+        <article class="svc">
+          <div class="ico"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l14-6v14L3 13z"/><path d="M7 13v5a2 2 0 0 0 4 0v-3.5"/></svg></div>
+          <h3>Реклама в Meta</h3>
+          <p>Instagram і Facebook: налаштування кабінету й пікселя, аудиторії, тести, оптимізація. Бюджет ви платите напряму в Meta.</p>
+          <ul><li>Налаштування</li><li>A/B-тести</li><li>Оптимізація</li></ul>
+        </article>
+        <article class="svc">
+          <div class="ico"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg></div>
+          <h3>Звітність</h3>
+          <p>Щотижня бачите, скільки заявок прийшло, по чому і з якого оголошення. Без розмитих «охоплень».</p>
+          <ul><li>UTM-мітки</li><li>Ціна заявки</li><li>Щотижневий звіт</li></ul>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section id="who">
+    <div class="wrap">
+      <div class="sec-head">
+        <p class="eyebrow">Для кого</p>
+        <h2>Працюємо з тими, кому потрібні заявки</h2>
+      </div>
+      <div class="who">
+        <article><span class="tag">Наш основний досвід</span><h3>Онлайн-школи й курси</h3><p>Знаємо всю дорогу учня: заявка → пробне заняття → оплата. Тому робимо рекламу під записи, а не під перегляди.</p></article>
+        <article><h3>Експерти й викладачі</h3><p>Психологи, тренери, репетитори, консультанти, яким потрібен стабільний потік клієнтів.</p></article>
+        <article><h3>Малий бізнес і послуги</h3><p>Студії, салони, сервіси й магазини, які хочуть зрозуміти, скільки клієнтів приносить кожна гривня реклами.</p></article>
+      </div>
+    </div>
+  </section>
+
+  <section id="process">
+    <div class="wrap">
+      <div class="sec-head">
+        <p class="eyebrow">Як працюємо</p>
+        <h2>Від першої розмови до заявок</h2>
+      </div>
       <ol class="steps">
-        <li><b>Розбираємо продукт.</b> Хто клієнт, що його болить, чим ви кращі.</li>
-        <li><b>Формуємо офер і креативи.</b> Короткий і конкретний, з вигодою.</li>
-        <li><b>Тестуємо й рахуємо.</b> Дивимось на цифри та залишаємо те, що працює.</li>
+        <li><span class="time">1 день · безкоштовно</span><h3>Розбір</h3><p>Дивимося ваш продукт, Instagram, сайт і рекламу. Показуємо, де губляться клієнти.</p></li>
+        <li><span class="time">2–3 дні</span><h3>Стратегія й офер</h3><p>Визначаємо аудиторію, болі й пропозицію, від якої складно відмовитися.</p></li>
+        <li><span class="time">до 7 днів</span><h3>Запуск</h3><p>Готуємо сайт, креативи й рекламу, підключаємо аналітику та запускаємо тест.</p></li>
+        <li><span class="time">щотижня</span><h3>Звіт і покращення</h3><p>Вимикаємо те, що не працює, масштабуємо те, що приносить заявки.</p></li>
       </ol>
-    </section>
+    </div>
+  </section>
 
-    <section id="академія" class="academy">
-      <h2>Академія для новачків</h2>
-      <p>Хочеш стати маркетологом? Працюй над реальними проєктами в команді «ментор + стажери», а не лише дивись уроки. Ми чесно розповімо, що ти отримуєш: реальний кейс, досвід і місце в портфоліо.</p>
-      <a class="btn" href="mailto:gevdi.stas10m@gmail.com?subject=Junction%20Academy">Залишити заявку</a>
-    </section>
+  <section id="work">
+    <div class="wrap">
+      <div class="sec-head">
+        <p class="eyebrow">Роботи</p>
+        <h2>Каруселі для онлайн-школи мов</h2>
+        <p>Перші слайди каруселей, які ми робимо для онлайн-школи словацької й німецької мов: ідея, тексти й дизайн.</p>
+      </div>
+      <div class="work">
+        <figure><img src="img/w02.jpg" alt="Карусель «Перші 24 години у Словаччині»" loading="lazy" width="1000" height="600"></figure>
+        <figure><img src="img/w03.jpg" alt="Карусель «Слова, які звучать не так»" loading="lazy" width="1000" height="600"></figure>
+        <figure><img src="img/w04.jpg" alt="Карусель «Слова про пожежу»" loading="lazy" width="1000" height="600"></figure>
+        <figure><img src="img/w05.jpg" alt="Карусель «Слова для кафе і ресторану»" loading="lazy" width="1000" height="600"></figure>
+        <figure><img src="img/w06.jpg" alt="Карусель «Слова-протилежності»" loading="lazy" width="1000" height="600"></figure>
+        <figure><img src="img/w07.jpg" alt="Карусель «Слова, корисні на роботі»" loading="lazy" width="1000" height="600"></figure>
+        <figure><img src="img/w08.jpg" alt="Карусель «Перша допомога»" loading="lazy" width="1000" height="600"></figure>
+        <figure><img src="img/w09.jpg" alt="Карусель «Слова, які здивують»" loading="lazy" width="1000" height="600"></figure>
+      </div>
+      <p class="work-note">Кейси з цифрами реклами додамо після перших запусків.</p>
+    </div>
+  </section>
 
-    <section id="контакт" class="contact">
-      <h2>Обговоримо ваш проєкт?</h2>
-      <p>Напишіть коротко, що ви продаєте і кому. Відповімо з ідеями.</p>
-      <a class="btn" href="mailto:gevdi.stas10m@gmail.com?subject=Junction">gevdi.stas10m@gmail.com</a>
-    </section>
-  </main>
+  <section id="why">
+    <div class="wrap">
+      <div class="sec-head">
+        <p class="eyebrow">Чому Junction</p>
+        <h2>Рахуємо заявки, а не лайки</h2>
+      </div>
+      <div class="why">
+        <article><h3>Знаємо, що відбувається після кліку</h3><p>Ми самі працюємо з заявками в онлайн-школі, тому бачимо, які ліди доходять до оплати, а які ні.</p></article>
+        <article><h3>Усе в одних руках</h3><p>Сайт, креатив і реклама робляться разом, тож обіцянка в рекламі збігається з тим, що людина бачить на сайті.</p></article>
+        <article><h3>Багато варіантів для тесту</h3><p>Робимо кілька версій перших секунд кожного ролика власним інструментом, тож переможця видно швидше й дешевше.</p></article>
+        <article><h3>Прозорі цифри</h3><p>UTM-мітки на кожному оголошенні й щотижневий звіт: ви знаєте, звідки прийшов кожен клієнт.</p></article>
+      </div>
+      <div class="funnel" aria-label="Метрики, за якими ми дивимося на воронку">
+        <span>Покази<b>CPM</b></span><span class="to">→</span>
+        <span>Кліки<b>CTR</b></span><span class="to">→</span>
+        <span>Заявки<b>CPL</b></span><span class="to">→</span>
+        <span>Клієнти<b>CPA</b></span>
+      </div>
+    </div>
+  </section>
 
-  <footer>© 2026 Junction</footer>
+  <section id="prices">
+    <div class="wrap">
+      <div class="sec-head">
+        <p class="eyebrow">Ціни</p>
+        <h2>Пакети й ціни</h2>
+        <p>Точну вартість називаємо після безкоштовного розбору, коли зрозуміло обсяг роботи.</p>
+      </div>
+      <div class="prices">
+        <div class="price"><h3>Контент</h3><p>8 каруселей на місяць, тексти й дизайн, 1 коло правок</p><div class="sum">від 3 000 ₴<small>на місяць</small></div></div>
+        <div class="price"><h3>Креативи: монтаж</h3><p>5 рекламних креативів із ваших матеріалів + варіації хуків для тесту</p><div class="sum">від 3 000 ₴<small>за пакет</small></div></div>
+        <div class="price"><h3>Креативи зі зйомкою</h3><p>Сценарій, UGC-зйомка й монтаж, 3–5 роликів</p><div class="sum">від 5 000 ₴<small>за пакет</small></div></div>
+        <div class="price"><h3>Лендінг</h3><p>Одна сторінка під ваш офер: форма заявки, піксель, аналітика</p><div class="sum">від 7 000 ₴<small>разово</small></div></div>
+        <div class="price"><h3>Сайт з логікою</h3><p>Кілька сторінок, CRM, сповіщення в Telegram, інтеграції</p><div class="sum">від 15 000 ₴<small>після ТЗ</small></div></div>
+        <div class="price"><h3>Реклама в Meta</h3><p>Налаштування, ведення, оптимізація, звіт щотижня</p><div class="sum">від 5 000 ₴<small>на місяць</small></div></div>
+        <div class="price hot"><h3>Junction під ключ <span class="badge">вигідно</span></h3><p>Контент + рекламні креативи + ведення реклами + звіт. Лендінг для клієнтів комплексу зі знижкою 50%</p><div class="sum">від 10 000 ₴<small>на місяць</small></div></div>
+      </div>
+      <div class="price-rules">
+        <div><b>Рекламний бюджет окремо</b>Ви платите його напряму в Meta зі своєї картки. Ми бачимо кожну гривню, але не тримаємо ваші гроші.</div>
+        <div><b>−50% для перших трьох клієнтів</b>В обмін на чесний відгук і дозвіл показати результати в кейсі.</div>
+        <div><b>Розбір безкоштовно</b>Покажемо, що можна покращити, навіть якщо ви вирішите не працювати з нами.</div>
+      </div>
+    </div>
+  </section>
+
+  <section id="lead" class="lead-sec">
+    <div class="wrap">
+      <div class="side">
+        <p class="eyebrow">Безкоштовний розбір</p>
+        <h2>Покажемо, де ви втрачаєте клієнтів</h2>
+        <p>Залиште заявку, і ми подивимося ваш Instagram, сайт і рекламу. Відповімо протягом дня.</p>
+        <ul class="gets">
+          <li>3 конкретні речі, які варто змінити вже зараз</li>
+          <li>Ідеї креативів і офера саме для вашого бізнесу</li>
+          <li>Чесна оцінка: чи потрібна вам реклама зараз</li>
+        </ul>
+      </div>
+      <form id="leadForm" novalidate>
+        <div class="row2">
+          <label for="f-name">Ваше ім'я<input id="f-name" name="name" autocomplete="name" required placeholder="Олена"></label>
+          <label for="f-biz">Бізнес або проєкт<input id="f-biz" name="business" required placeholder="Онлайн-школа англійської"></label>
+        </div>
+        <div class="row2">
+          <label for="f-link">Instagram або сайт <span class="opt">(необов'язково)</span><input id="f-link" name="link" placeholder="@yourschool"></label>
+          <label for="f-contact">Telegram або телефон<input id="f-contact" name="contact" required placeholder="@username або +380…"></label>
+        </div>
+        <label for="f-service">Що вас цікавить
+          <select id="f-service" name="service">
+            <option>Ще не знаю — потрібен розбір</option>
+            <option>Сайт або лендінг</option>
+            <option>Контент (каруселі, Reels)</option>
+            <option>Рекламні креативи</option>
+            <option>Реклама в Meta</option>
+            <option>Junction під ключ</option>
+          </select>
+        </label>
+        <label for="f-pain">Що зараз найбільше болить <span class="opt">(необов'язково)</span><textarea id="f-pain" name="pain" placeholder="Наприклад: реклама є, а заявок мало"></textarea></label>
+        <input type="hidden" id="f-utm" name="utm">
+        <button class="btn btn-main" type="submit">Отримати безкоштовний розбір <span class="arr" aria-hidden="true">→</span></button>
+        <p class="consent">Надсилаючи форму, ви погоджуєтеся, що ми зв'яжемося з вами щодо заявки.</p>
+        <p class="form-msg" id="formMsg" role="status" aria-live="polite"></p>
+      </form>
+    </div>
+  </section>
+
+  <section id="faq">
+    <div class="wrap">
+      <div class="sec-head">
+        <p class="eyebrow">Питання</p>
+        <h2>Часті питання</h2>
+      </div>
+      <div class="faq">
+        <details><summary>Скільки грошей потрібно на саму рекламу?</summary><p>Для першого тесту зазвичай вистачає невеликого денного бюджету на 5–7 днів. Точну суму підбираємо на розборі під ваш продукт і ціну клієнта. Бюджет ви платите напряму в Meta.</p></details>
+        <details><summary>Коли будуть перші заявки?</summary><p>Перші цифри видно вже за кілька днів тесту. Гарантувати кількість заявок наперед чесно не може ніхто, але щотижня ви бачитимете, що працює, а що ми змінюємо.</p></details>
+        <details><summary>Можна замовити тільки одну послугу?</summary><p>Так. Наприклад, лише лендінг або лише креативи. Комплекс просто вигідніший, бо всі частини працюють разом.</p></details>
+        <details><summary>Як ви рахуєте результат?</summary><p>Ставимо UTM-мітки на кожне оголошення й підключаємо піксель. У звіті бачите кількість заявок, ціну заявки й оголошення, яке їх принесло.</p></details>
+        <details><summary>Ви працюєте лише з онлайн-школами?</summary><p>Ні. Онлайн-освіта — наш основний досвід, але ми працюємо з експертами, послугами й малим бізнесом.</p></details>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <a class="brand" href="#top"><img src="img/logo.png" alt="" width="38" height="38"><span><b>Junction Agency</b><small>сайти, креативи й реклама, що приводять клієнтів</small></span></a>
+    <nav aria-label="Контакти">
+      <a href="https://www.instagram.com/junction_agency/" target="_blank" rel="noopener">Instagram</a>
+      <a href="#lead">Залишити заявку</a>
+    </nav>
+    <small>© 2026 Junction Agency</small>
+  </div>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+/* ---------- lead form: sends to the CRM endpoint once it is set (Apps Script URL) ---------- */
+(function () {
+  var ENDPOINT = window.JUNCTION_ENDPOINT || "";       // stage 2: paste the Apps Script web-app URL here
+  var form = document.getElementById("leadForm"), msg = document.getElementById("formMsg");
+  try {                                                 // keep where the visitor came from (utm_* from the ad link)
+    var q = new URLSearchParams(location.search), utm = [];
+    ["utm_source", "utm_medium", "utm_campaign", "utm_content", "utm_term"].forEach(function (k) { if (q.get(k)) utm.push(k + "=" + q.get(k)); });
+    document.getElementById("f-utm").value = utm.join("&") || "direct";
+  } catch (e) {}
+  form.addEventListener("submit", function (e) {
+    e.preventDefault();
+    msg.className = "form-msg";
+    var missing = ["f-name", "f-biz", "f-contact"].filter(function (id) { return !document.getElementById(id).value.trim(); });
+    if (missing.length) { msg.textContent = "Заповніть ім'я, бізнес і контакт, щоб ми могли відповісти."; msg.classList.add("err"); document.getElementById(missing[0]).focus(); return; }
+    if (!ENDPOINT) { msg.textContent = "Форма ще не підключена до CRM. Це буде наступним кроком."; msg.classList.add("err"); return; }
+    var data = new FormData(form); data.append("page", location.href);
+    var btn = form.querySelector("button"); btn.disabled = true;
+    fetch(ENDPOINT, { method: "POST", body: data, mode: "no-cors" }).then(function () {
+      msg.textContent = "Дякуємо! Заявку отримано, напишемо вам протягом дня."; msg.classList.add("ok"); form.reset();
+      if (window.fbq) window.fbq("track", "Lead");
+    }).catch(function () {
+      msg.textContent = "Не вдалося надіслати. Спробуйте ще раз або напишіть нам в Instagram."; msg.classList.add("err");
+    }).finally(function () { btn.disabled = false; });
+  });
+})();
+
+/* ---------- hero 3D: the logo's two strands crossing, with Site / Creative / Ads flowing into the junction ---------- */
+(function () {
+  var stage = document.getElementById("stage"), canvas = document.getElementById("hero3d");
+  if (!window.THREE || !stage) return;
+  var reduce = window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var renderer;
+  try { renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true, alpha: true }); } catch (e) { return; }
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+  renderer.outputEncoding = THREE.sRGBEncoding;
+  stage.classList.add("ready");
+
+  var scene = new THREE.Scene();
+  var camera = new THREE.PerspectiveCamera(34, 1, 0.1, 100);
+
+  scene.add(new THREE.AmbientLight(0xb8a0ff, 0.55));
+  var key = new THREE.DirectionalLight(0xffffff, 1.1); key.position.set(3, 5, 6); scene.add(key);
+  var rimV = new THREE.PointLight(0x9b5cff, 2.2, 20); rimV.position.set(-4, 2, 3); scene.add(rimV);
+  var rimG = new THREE.PointLight(0x2fe39a, 1.8, 20); rimG.position.set(4, -2, 3); scene.add(rimG);
+
+  function glowTex(inner) {
+    var c = document.createElement("canvas"); c.width = c.height = 128; var g = c.getContext("2d");
+    var gr = g.createRadialGradient(64, 64, 0, 64, 64, 64); gr.addColorStop(0, inner); gr.addColorStop(.35, inner.replace("1)", ".35)")); gr.addColorStop(1, "rgba(0,0,0,0)");
+    g.fillStyle = gr; g.fillRect(0, 0, 128, 128); var t = new THREE.CanvasTexture(c); return t;
+  }
+  var glowW = glowTex("rgba(255,255,255,1)");
+
+  /* the logo: two thick glossy strands that cross in the middle */
+  var logo = new THREE.Group(); scene.add(logo);
+  function strand(sign, colA, colB) {
+    var pts = [];
+    for (var i = 0; i <= 48; i++) {
+      var t = i / 48;
+      pts.push(new THREE.Vector3(-1.55 + 3.1 * t, sign * 1.35 * Math.cos(Math.PI * t), sign * 0.32 * Math.sin(Math.PI * t)));
+    }
+    var curve = new THREE.CatmullRomCurve3(pts);
+    var geo = new THREE.TubeGeometry(curve, 160, 0.34, 32, false);
+    // vertex colours fade along the strand like the gradient in the logo
+    var cA = new THREE.Color(colA), cB = new THREE.Color(colB), col = [], uv = geo.attributes.uv;
+    for (var k = 0; k < uv.count; k++) { var c = cA.clone().lerp(cB, uv.getX(k)); col.push(c.r, c.g, c.b); }
+    geo.setAttribute("color", new THREE.Float32BufferAttribute(col, 3));
+    var mat = new THREE.MeshPhysicalMaterial({ vertexColors: true, roughness: 0.22, metalness: 0.1, clearcoat: 1, clearcoatRoughness: 0.15, emissive: new THREE.Color(colB).multiplyScalar(0.12) });
+    var mesh = new THREE.Mesh(geo, mat); logo.add(mesh);
+    [0, 1].forEach(function (e) {
+      var capMat = new THREE.MeshPhysicalMaterial({ color: e ? colB : colA, roughness: 0.22, metalness: 0.1, clearcoat: 1, clearcoatRoughness: 0.15, emissive: new THREE.Color(colB).multiplyScalar(0.12) });
+      var cap = new THREE.Mesh(new THREE.SphereGeometry(0.34, 32, 24), capMat); cap.position.copy(curve.getPoint(e)); logo.add(cap);
+    });
+  }
+  strand(1, 0x4b0082, 0xa66bff);   // purple: top-left → bottom-right
+  strand(-1, 0x12a56a, 0x46f2ad);  // green: bottom-left → top-right
+  var core = new THREE.Sprite(new THREE.SpriteMaterial({ map: glowW, color: 0xd9c4ff, transparent: true, opacity: 0.55, depthWrite: false, blending: THREE.AdditiveBlending }));
+  core.scale.set(2.6, 2.6, 1); logo.add(core);
+
+  /* three service nodes, curved links into the crossing, particles flowing along them */
+  var nodeDefs = [
+    { p: new THREE.Vector3(-2.75, 1.85, -0.6), c: 0xb996ff },
+    { p: new THREE.Vector3(2.85, 1.55, -0.9), c: 0x2fe39a },
+    { p: new THREE.Vector3(0.35, -2.6, 0.4), c: 0xffffff }
+  ];
+  var flows = [];
+  nodeDefs.forEach(function (n) {
+    var orb = new THREE.Mesh(new THREE.SphereGeometry(0.13, 20, 16), new THREE.MeshBasicMaterial({ color: n.c }));
+    orb.position.copy(n.p); scene.add(orb);
+    var halo = new THREE.Sprite(new THREE.SpriteMaterial({ map: glowW, color: n.c, transparent: true, opacity: 0.8, depthWrite: false, blending: THREE.AdditiveBlending }));
+    halo.scale.set(1.1, 1.1, 1); halo.position.copy(n.p); scene.add(halo);
+    var mid = n.p.clone().multiplyScalar(0.5).add(new THREE.Vector3(n.p.y * 0.25, -n.p.x * 0.25, 0.8));
+    var curve = new THREE.QuadraticBezierCurve3(n.p.clone(), mid, new THREE.Vector3(0, 0, 0));
+    var line = new THREE.Line(new THREE.BufferGeometry().setFromPoints(curve.getPoints(60)),
+      new THREE.LineBasicMaterial({ color: n.c, transparent: true, opacity: 0.35 }));
+    scene.add(line);
+    var N = 16, pos = new Float32Array(N * 3), geo = new THREE.BufferGeometry();
+    geo.setAttribute("position", new THREE.BufferAttribute(pos, 3));
+    var pts = new THREE.Points(geo, new THREE.PointsMaterial({ map: glowW, color: n.c, size: 0.22, transparent: true, depthWrite: false, blending: THREE.AdditiveBlending }));
+    scene.add(pts);
+    n.orb = orb; n.halo = halo;
+    flows.push({ curve: curve, pos: pos, geo: geo, N: N, off: Math.random() });
+  });
+
+  /* faint dust far behind for depth */
+  (function () {
+    var N = 260, p = new Float32Array(N * 3);
+    for (var i = 0; i < N; i++) { p[i * 3] = (Math.random() - .5) * 18; p[i * 3 + 1] = (Math.random() - .5) * 14; p[i * 3 + 2] = -4 - Math.random() * 8; }
+    var g = new THREE.BufferGeometry(); g.setAttribute("position", new THREE.BufferAttribute(p, 3));
+    var dust = new THREE.Points(g, new THREE.PointsMaterial({ map: glowW, color: 0x9b7bd8, size: 0.12, transparent: true, opacity: 0.6, depthWrite: false, blending: THREE.AdditiveBlending }));
+    dust.name = "dust"; scene.add(dust);
+  })();
+
+  var labels = Array.prototype.slice.call(stage.querySelectorAll(".node-label"));
+  var W = 1, H = 1;
+  function resize() {
+    var r = stage.getBoundingClientRect(); W = Math.max(1, r.width); H = Math.max(1, r.height);
+    renderer.setSize(W, H, false); camera.aspect = W / H;
+    camera.position.set(0, 0, W / H < 1.1 ? 11.6 : 10.2); camera.updateProjectionMatrix();
+    if (reduce) draw(0);
+  }
+
+  var mx = 0, my = 0, rx = 0, ry = 0, v = new THREE.Vector3();
+  window.addEventListener("pointermove", function (e) { mx = e.clientX / innerWidth * 2 - 1; my = e.clientY / innerHeight * 2 - 1; }, { passive: true });
+
+  function draw(t) {
+    rx += (my * 0.32 - rx) * 0.05; ry += (mx * 0.5 - ry) * 0.05;
+    logo.rotation.set(rx + Math.sin(t * 0.6) * 0.06, ry + Math.sin(t * 0.35) * 0.25, Math.sin(t * 0.4) * 0.04);
+    logo.position.y = Math.sin(t * 0.9) * 0.08;
+    core.material.opacity = 0.45 + Math.sin(t * 2.2) * 0.12;
+    scene.rotation.y = ry * 0.35; scene.rotation.x = rx * 0.25;
+    flows.forEach(function (f) {
+      for (var i = 0; i < f.N; i++) {
+        var u = ((t * 0.22 + f.off + i / f.N) % 1); var pt = f.curve.getPoint(u);
+        f.pos[i * 3] = pt.x; f.pos[i * 3 + 1] = pt.y; f.pos[i * 3 + 2] = pt.z;
+      }
+      f.geo.attributes.position.needsUpdate = true;
+    });
+    nodeDefs.forEach(function (n, i) { n.halo.scale.setScalar(1 + Math.sin(t * 2 + i * 2) * 0.12); });
+    var dust = scene.getObjectByName("dust"); if (dust) dust.rotation.z = t * 0.01;
+    renderer.render(scene, camera);
+    scene.updateMatrixWorld();
+    labels.forEach(function (el, i) {
+      v.copy(nodeDefs[i].p).applyMatrix4(scene.matrixWorld).project(camera);
+      el.style.transform = "translate(-50%, -50%) translate(" + ((v.x * 0.5 + 0.5) * W).toFixed(1) + "px," + ((-v.y * 0.5 + 0.5) * H + 26).toFixed(1) + "px)";
+    });
+  }
+
+  var visible = true, t0 = performance.now();
+  if ("IntersectionObserver" in window) new IntersectionObserver(function (es) { visible = es[0].isIntersecting; }).observe(stage);
+  function loop(now) { requestAnimationFrame(loop); if (!visible || document.hidden) return; draw((now - t0) / 1000); }
+  if (window.ResizeObserver) new ResizeObserver(resize).observe(stage); else window.addEventListener("resize", resize);
+  resize();
+  if (reduce) draw(0); else requestAnimationFrame(loop);
+})();
+</script>
 </body>
 </html>
