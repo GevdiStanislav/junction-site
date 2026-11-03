@@ -3,7 +3,7 @@
   "redirects": [
     {
       "source": "/",
-      "has": [{ "type": "host", "value": "junction-crm.vercel.app" }],
+      "has": [{ "type": "host", "value": "junction-agency-crm.vercel.app" }],
       "destination": "/crm",
       "permanent": false
     }
