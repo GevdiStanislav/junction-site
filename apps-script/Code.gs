@@ -95,6 +95,21 @@ function doGet(e) {
     return json_({ ok: true });
   }
 
+  if (p.action === 'delete') {
+    const lock = LockService.getScriptLock();
+    lock.waitLock(10000);
+    try {
+      const m = Math.max(0, sh.getLastRow() - 1);
+      const ids = m ? sh.getRange(2, 1, m, 1).getValues().map(r => String(r[0])) : [];
+      const i = ids.indexOf(String(p.id));
+      if (i < 0) return json_({ ok: false, error: 'not_found' });
+      sh.deleteRow(i + 2);
+    } finally {
+      lock.releaseLock();
+    }
+    return json_({ ok: true });
+  }
+
   const rows = n ? sh.getRange(2, 1, n, HEAD.length).getValues() : [];
   const leads = rows.map(r => ({
     id: String(r[0]), date: r[1] instanceof Date ? r[1].toISOString() : String(r[1]),

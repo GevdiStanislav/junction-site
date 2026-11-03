@@ -74,6 +74,19 @@ button { font: inherit; cursor: pointer; }
 .tags { display: flex; flex-wrap: wrap; gap: 6px; }
 .tag { font-size: 11.5px; font-weight: 800; padding: 3px 8px; border-radius: 999px; background: #f1ecfb; color: var(--indigo); max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .tag.src { background: #e6fbf2; color: #0d7d55; }
+.card { cursor: grab; }
+.x-del { position: absolute; top: 8px; right: 8px; width: 26px; height: 26px; border: 0; border-radius: 8px; background: #f6f2fd; color: #9c92b3; font-size: 12px; font-weight: 800; opacity: 0; transition: opacity .12s ease, background .12s ease, color .12s ease; }
+.card:hover .x-del, .card:focus-within .x-del { opacity: 1; }
+.x-del:hover { background: #ffe3ea; color: #d1284d; }
+@media (hover: none) { .x-del { opacity: 1; } }
+.card:hover .ago, .card:focus-within .ago { visibility: hidden; }
+.card.confirm { cursor: default; background: #fff5f7; }
+.confirm-row { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 4px; }
+.btn-del { border: 0; background: #e8335a; color: #fff; font-weight: 800; padding: 8px 12px; border-radius: 10px; }
+.btn-no { border: 0; background: #f1ecfb; color: var(--ink); font-weight: 800; padding: 8px 12px; border-radius: 10px; }
+.btn-del-outline { border: 2px solid #ffd0db; background: #fff; color: #d1284d; font-weight: 800; padding: 9px 14px; border-radius: 12px; }
+.danger { border-top: 1px solid var(--line); padding-top: 16px; }
+.danger p { margin: 0 0 8px; color: var(--ink-2); font-size: 14px; }
 .card .note { font-size: 12.5px; color: var(--ink-2); display: flex; gap: 6px; }
 .card .note::before { content: "💬"; }
 
@@ -174,7 +187,7 @@ textarea:focus { outline: none; border-color: var(--lilac); }
   var STATUSES = ["Нова", "Зв'язались", "Розбір", "Пропозиція", "Клієнт", "Відмова"];
   var COLORS = { "Нова": "var(--s-new)", "Зв'язались": "var(--s-contact)", "Розбір": "var(--s-audit)", "Пропозиція": "var(--s-offer)", "Клієнт": "var(--s-won)", "Відмова": "var(--s-lost)" };
   var IN_WORK = ["Зв'язались", "Розбір", "Пропозиція"];
-  var leads = [], query = "", view = "board", sort = { key: "date", dir: "desc" }, openId = null;
+  var confirmId = null, leads = [], query = "", view = "board", sort = { key: "date", dir: "desc" }, openId = null;
   try { view = localStorage.getItem("jcrm-view") || "board"; } catch (e) {}
   var $ = function (id) { return document.getElementById(id); };
   var col = function (s) { return COLORS[s] || "var(--lilac)"; };
@@ -233,6 +246,15 @@ textarea:focus { outline: none; border-color: var(--lilac); }
     });
   }
 
+  function removeLead(id) {
+    var i = leads.findIndex(function (x) { return x.id === id; }); if (i < 0) return;
+    var gone = leads.splice(i, 1)[0];
+    confirmId = null; if (openId === id) closeDrawer(); render();
+    call({ action: "delete", id: id }).then(function (r) {
+      if (!r.ok) throw 0; toast("Заявку «" + gone.name + "» видалено");
+    }).catch(function () { leads.splice(i, 0, gone); render(); toast("Не вдалося видалити. Онови Apps Script до нової версії."); });
+  }
+
   /* ---------- views ---------- */
   function showLogin(msg) {
     $("loginWrap").hidden = false; ["stats", "stage", "views", "search", "refresh", "logout"].forEach(function (i) { $(i).hidden = true; });
@@ -266,12 +288,16 @@ textarea:focus { outline: none; border-color: var(--lilac); }
     }).join("");
   }
   function card(l) {
-    return '<button type="button" class="card" draggable="true" data-id="' + esc(l.id) + '" style="--c:' + col(l.status) + '">' +
+    if (confirmId === l.id) return '<article class="card confirm" data-id="' + esc(l.id) + '" style="--c:var(--s-lost)">' +
+      '<span class="name">Видалити заявку «' + esc(l.name) + '»?</span><span class="biz">Її не можна буде повернути.</span>' +
+      '<span class="confirm-row"><button type="button" class="btn-del" data-act="del-yes">Видалити</button><button type="button" class="btn-no" data-act="del-no">Скасувати</button></span></article>';
+    return '<article class="card" tabindex="0" draggable="true" data-id="' + esc(l.id) + '" style="--c:' + col(l.status) + '">' +
+      '<button type="button" class="x-del" data-act="del-ask" aria-label="Видалити заявку ' + esc(l.name) + '" title="Видалити">✕</button>' +
       '<span class="t"><span class="name">' + esc(l.name) + '</span><span class="ago">' + ago(l.date) + "</span></span>" +
       (l.business ? '<span class="biz">' + esc(l.business) + "</span>" : "") +
       '<span class="tags">' + (l.service ? '<span class="tag">' + esc(l.service) + "</span>" : "") + '<span class="tag src">' + esc(source(l.utm)) + "</span></span>" +
       (l.comment ? '<span class="note">' + esc(String(l.comment).slice(0, 70)) + (String(l.comment).length > 70 ? "…" : "") + "</span>" : "") +
-      "</button>";
+      "</article>";
   }
   function renderTable(list) {
     var k = sort.key, dir = sort.dir === "asc" ? 1 : -1;
@@ -310,13 +336,27 @@ textarea:focus { outline: none; border-color: var(--lilac); }
       (l.pain ? '<div class="d-sec"><h3>Що болить</h3><div class="pain">' + esc(l.pain) + "</div></div>" : "") +
       '<div class="d-sec"><h3>Коментар</h3><textarea id="dComment" placeholder="Про що домовились, коли написати знову">' + esc(keepComment != null ? keepComment : l.comment) + '</textarea>' +
       '<div style="display:flex;gap:12px;align-items:center;margin-top:10px"><button type="button" class="save" id="dSave">Зберегти коментар</button><span class="status-msg" id="dMsg" role="status"></span></div></div>' +
+      '<div class="d-sec danger"><button type="button" class="btn-del-outline" id="dDel">✕ Видалити заявку</button>' +
+      '<div id="dDelBox" hidden><p>Видалити заявку «' + esc(l.name) + '» назавжди? Рядок зникне і з Google-таблиці.</p>' +
+      '<span class="confirm-row"><button type="button" class="btn-del" id="dDelYes">Так, видалити</button><button type="button" class="btn-no" id="dDelNo">Скасувати</button></span></div></div>' +
       "</div>";
     d.hidden = false; $("scrim").hidden = false;
   }
   function closeDrawer() { openId = null; $("drawer").hidden = true; $("scrim").hidden = true; }
 
   /* ---------- events ---------- */
-  $("board").addEventListener("click", function (e) { var c = e.target.closest(".card"); if (c) openDrawer(c.dataset.id); });
+  $("board").addEventListener("click", function (e) {
+    var c = e.target.closest(".card"); if (!c) return;
+    var act = e.target.closest("[data-act]"); act = act && act.dataset.act;
+    if (act === "del-ask") { confirmId = c.dataset.id; render(); var y = document.querySelector('.card.confirm [data-act="del-no"]'); if (y) y.focus(); return; }
+    if (act === "del-no") { confirmId = null; render(); return; }
+    if (act === "del-yes") { removeLead(c.dataset.id); return; }
+    if (!c.classList.contains("confirm")) openDrawer(c.dataset.id);
+  });
+  $("board").addEventListener("keydown", function (e) {
+    var c = e.target.classList && e.target.classList.contains("card") ? e.target : null;
+    if (c && (e.key === "Enter" || e.key === " ")) { e.preventDefault(); openDrawer(c.dataset.id); }
+  });
   $("tableWrap").addEventListener("click", function (e) {
     var s = e.target.closest("[data-sort]");
     if (s) { var k = s.dataset.sort; sort = { key: k, dir: sort.key === k && sort.dir === "asc" ? "desc" : "asc" }; render(); return; }
@@ -336,6 +376,9 @@ textarea:focus { outline: none; border-color: var(--lilac); }
   });
   $("drawer").addEventListener("click", function (e) {
     if (e.target.id === "dClose") return closeDrawer();
+    if (e.target.id === "dDel") { $("dDelBox").hidden = false; e.target.hidden = true; return; }
+    if (e.target.id === "dDelNo") { $("dDelBox").hidden = true; $("dDel").hidden = false; return; }
+    if (e.target.id === "dDelYes" && openId) { removeLead(openId); return; }
     var p = e.target.closest(".pill");
     if (p && openId) { var id = openId, s = p.dataset.status; update(id, { status: s }).then(function (ok) { if (ok) toast("Статус: " + s); }); return; }
     var cp = e.target.closest("[data-copy]");
