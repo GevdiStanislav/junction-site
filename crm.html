@@ -8,94 +8,163 @@
 <link rel="icon" href="img/logo.png">
 <link href="https://fonts.googleapis.com/css2?family=Russo+One&family=Manrope:wght@500;600;700;800&display=swap" rel="stylesheet">
 <style>
+/* Layout: dark brand bar on top, stats strip, then a bright violet board with light columns (Trello-like).
+   Each status owns one colour; cards stay white and quiet, the colour lives in the strip and the badge. */
 :root {
-  --bg: #0e0620; --bg-2: #160a30; --bg-3: #1f1042; --violet: #6a1fb0; --lilac: #b996ff; --green: #2fe39a;
-  --ink: #f5f0ff; --muted: #bcaedc; --line: rgba(185,150,255,.16); --red: #ff8fa6;
+  --night: #12072a; --night-2: #1d0e3f; --violet: #6a1fb0; --indigo: #4b0082; --lilac: #b996ff;
+  --green: #2fe39a; --paper: #ffffff; --col: #f3eefc; --ink: #1c1233; --ink-2: #5d5277; --line: #e4dcf3;
+  --s-new: #16c784; --s-contact: #3d8bff; --s-audit: #ff9f1c; --s-offer: #9b5cff; --s-won: #0fb37a; --s-lost: #ff5c7a;
   --font-display: "Russo One", "Arial Black", system-ui, sans-serif;
   --font-body: "Manrope", "Segoe UI", system-ui, sans-serif;
-  color-scheme: dark;
+  color-scheme: light;
 }
 * { box-sizing: border-box; }
 [hidden] { display: none !important; }
-body { margin: 0; background: var(--bg); color: var(--ink); font: 500 15px/1.5 var(--font-body); }
-.wrap { max-width: 1400px; margin: 0 auto; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
-header { border-bottom: 1px solid var(--line); background: var(--bg-2); }
-header .wrap { display: flex; align-items: center; gap: 14px; min-height: 64px; flex-wrap: wrap; padding-block: 10px; }
-header img { width: 32px; height: 32px; border-radius: 8px; }
-h1 { font: 400 20px/1 var(--font-display); margin: 0; }
-.spacer { flex: 1; }
-button, .btn { font: 700 14px/1 var(--font-body); border: 0; border-radius: 999px; padding: 11px 16px; cursor: pointer; background: var(--bg-3); color: var(--ink); }
-button.main { background: var(--green); color: #07130e; }
-button:disabled { opacity: .6; cursor: default; }
+.visually { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+html, body { height: 100%; }
+body { margin: 0; background: var(--night); color: var(--ink); font: 600 14.5px/1.45 var(--font-body); display: flex; flex-direction: column; }
 :focus-visible { outline: 3px solid var(--green); outline-offset: 2px; }
-.muted { color: var(--muted); }
+button { font: inherit; cursor: pointer; }
+.px { padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+
+/* top bar */
+.bar { color: #fff; display: flex; align-items: center; gap: 12px; flex-wrap: wrap; padding-block: 12px; border-bottom: 1px solid rgba(255,255,255,.08); }
+.bar img { width: 34px; height: 34px; border-radius: 9px; }
+.bar h1 { margin: 0; font: 400 20px/1 var(--font-display); }
+.bar .upd { color: #b9aed6; font-size: 12.5px; font-weight: 600; }
+.bar .grow { flex: 1; }
+.seg { display: inline-flex; background: rgba(255,255,255,.08); border-radius: 12px; padding: 4px; }
+.seg button { border: 0; background: transparent; color: #d9cff2; padding: 8px 14px; border-radius: 9px; font-weight: 800; font-size: 13.5px; }
+.seg button[aria-pressed="true"] { background: #fff; color: var(--indigo); }
+.search { width: 240px; max-width: 100%; border: 0; border-radius: 12px; padding: 10px 14px; font: 600 14px var(--font-body); background: rgba(255,255,255,.1); color: #fff; }
+.search::placeholder { color: #b9aed6; }
+.ghost { border: 0; border-radius: 12px; padding: 10px 14px; background: rgba(255,255,255,.1); color: #fff; font-weight: 800; font-size: 13.5px; }
+.ghost:hover { background: rgba(255,255,255,.18); }
+@media (max-width: 700px) { .search { order: 9; width: 100%; } }
+
+/* stats */
+.stats { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 12px; padding-block: 14px; }
+.stat { background: var(--night-2); border-radius: 16px; padding: 14px 16px; color: #fff; display: grid; gap: 2px; }
+.stat span { color: #b9aed6; font-size: 12.5px; font-weight: 700; }
+.stat b { font: 400 28px/1.1 var(--font-display); font-variant-numeric: tabular-nums; }
+.stat.hl b { color: var(--green); }
+@media (max-width: 760px) { .stats { grid-template-columns: repeat(2, minmax(0, 1fr)); } .stat:last-child { grid-column: 1 / -1; } }
+
+/* board area */
+.stage { flex: 1; min-height: 0; background: linear-gradient(135deg, #7b2ff2 0%, var(--violet) 45%, var(--indigo) 100%); border-radius: 22px 22px 0 0; padding-top: 16px; padding-bottom: 24px; overflow: auto; }
+.board { display: flex; gap: 14px; align-items: flex-start; min-height: 100%; }
+.col { flex: 1 0 200px; min-width: 0; background: var(--col); border-radius: 16px; display: flex; flex-direction: column; max-height: calc(100vh - 230px); min-height: 120px; transition: box-shadow .15s ease, transform .15s ease; }
+@media (max-width: 760px) { .stage { scroll-snap-type: x mandatory; } .col { flex: 0 0 84%; scroll-snap-align: start; } }
+.col.over { box-shadow: 0 0 0 3px var(--green), 0 12px 30px rgba(0,0,0,.25); transform: translateY(-2px); }
+.col-head { display: flex; align-items: center; gap: 8px; padding: 14px 14px 10px; font-weight: 800; }
+.col-head .dot { width: 10px; height: 10px; border-radius: 50%; background: var(--c); box-shadow: 0 0 0 4px color-mix(in srgb, var(--c) 22%, transparent); }
+.col-head .n { margin-left: auto; background: #fff; color: var(--ink-2); font-size: 12px; padding: 2px 9px; border-radius: 999px; font-variant-numeric: tabular-nums; }
+.col-body { padding: 0 10px 12px; overflow-y: auto; display: grid; gap: 9px; align-content: start; }
+.col-empty { border: 2px dashed var(--line); border-radius: 12px; padding: 16px; text-align: center; color: #9c92b3; font-size: 13px; font-weight: 700; }
+
+.card { position: relative; background: var(--paper); border-radius: 12px; padding: 12px 12px 11px 15px; box-shadow: 0 1px 2px rgba(28,18,51,.08), 0 2px 8px rgba(28,18,51,.06);
+  cursor: grab; display: grid; gap: 6px; text-align: left; border: 0; width: 100%; color: var(--ink); overflow: hidden; transition: transform .12s ease, box-shadow .12s ease; }
+.card::before { content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 4px; background: var(--c); }
+.card:hover { transform: translateY(-1px); box-shadow: 0 6px 18px rgba(28,18,51,.14); }
+.card.dragging { opacity: .45; }
+.card .t { display: flex; justify-content: space-between; gap: 8px; align-items: baseline; }
+.card .name { font-weight: 800; font-size: 15px; overflow-wrap: anywhere; }
+.card .ago { font-size: 12px; color: #9c92b3; white-space: nowrap; }
+.card .biz { color: var(--ink-2); font-size: 13.5px; overflow-wrap: anywhere; }
+.tags { display: flex; flex-wrap: wrap; gap: 6px; }
+.tag { font-size: 11.5px; font-weight: 800; padding: 3px 8px; border-radius: 999px; background: #f1ecfb; color: var(--indigo); max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.tag.src { background: #e6fbf2; color: #0d7d55; }
+.card .note { font-size: 12.5px; color: var(--ink-2); display: flex; gap: 6px; }
+.card .note::before { content: "💬"; }
+
+/* table */
+.tablewrap { background: #fff; border-radius: 16px; overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; min-width: 860px; }
+th, td { text-align: left; padding: 12px 14px; border-bottom: 1px solid var(--line); vertical-align: top; }
+th { font-size: 12px; text-transform: uppercase; letter-spacing: .06em; color: var(--ink-2); background: #faf8ff; position: sticky; top: 0; }
+th button { border: 0; background: none; font: inherit; color: inherit; text-transform: inherit; letter-spacing: inherit; padding: 0; }
+th button::after { content: " ↕"; opacity: .4; }
+th button[data-dir="asc"]::after { content: " ↑"; opacity: 1; }
+th button[data-dir="desc"]::after { content: " ↓"; opacity: 1; }
+tbody tr { cursor: pointer; }
+tbody tr:hover { background: #faf7ff; }
+td .muted { color: var(--ink-2); font-size: 13px; }
+.badge { display: inline-flex; align-items: center; gap: 6px; font-size: 12.5px; font-weight: 800; padding: 5px 10px; border-radius: 999px; color: var(--c); background: color-mix(in srgb, var(--c) 14%, #fff); white-space: nowrap; }
+.badge::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: var(--c); }
+
+/* drawer */
+.scrim { position: fixed; inset: 0; background: rgba(18,7,42,.45); z-index: 40; }
+.drawer { position: fixed; top: 0; right: 0; bottom: 0; width: min(440px, 100%); background: #fff; z-index: 41; display: flex; flex-direction: column;
+  box-shadow: -20px 0 50px rgba(18,7,42,.3); padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px); padding-right: env(safe-area-inset-right, 0px); }
+.d-head { padding: 22px 22px 16px; border-bottom: 1px solid var(--line); display: grid; gap: 6px; position: relative; }
+.d-head::before { content: ""; position: absolute; left: 0; right: 0; top: 0; height: 5px; background: var(--c); }
+.d-head h2 { margin: 0; font: 400 24px/1.15 var(--font-display); padding-right: 40px; overflow-wrap: anywhere; }
+.d-head .biz { color: var(--ink-2); font-weight: 700; }
+.x { position: absolute; top: 18px; right: 16px; border: 0; background: #f1ecfb; width: 36px; height: 36px; border-radius: 10px; font-size: 18px; color: var(--ink); }
+.d-body { padding: 18px 22px 24px; overflow-y: auto; display: grid; gap: 18px; align-content: start; }
+.d-sec h3 { margin: 0 0 8px; font-size: 12px; text-transform: uppercase; letter-spacing: .07em; color: var(--ink-2); }
+.pills { display: flex; flex-wrap: wrap; gap: 8px; }
+.pill { border: 2px solid color-mix(in srgb, var(--c) 35%, #fff); background: #fff; color: var(--ink); padding: 7px 12px; border-radius: 999px; font-weight: 800; font-size: 13px; }
+.pill[aria-pressed="true"] { background: var(--c); border-color: var(--c); color: #fff; }
+dl.info { margin: 0; display: grid; grid-template-columns: 120px 1fr; gap: 9px 12px; font-size: 14px; }
+dl.info dt { color: var(--ink-2); font-weight: 700; }
+dl.info dd { margin: 0; overflow-wrap: anywhere; }
+dl.info a { color: var(--violet); font-weight: 800; }
+.copy { border: 0; background: #f1ecfb; color: var(--indigo); font-size: 12px; font-weight: 800; border-radius: 8px; padding: 3px 8px; margin-left: 6px; }
+.pain { background: #faf7ff; border-radius: 12px; padding: 12px; font-size: 14px; overflow-wrap: anywhere; }
+textarea { width: 100%; min-height: 110px; resize: vertical; font: 600 14px/1.5 var(--font-body); color: var(--ink); border: 2px solid var(--line); border-radius: 12px; padding: 12px; }
+textarea:focus { outline: none; border-color: var(--lilac); }
+.save { border: 0; background: var(--green); color: #062014; font-weight: 800; padding: 11px 16px; border-radius: 12px; }
+.status-msg { font-size: 13px; font-weight: 700; color: #0d7d55; min-height: 1.3em; }
+.status-msg.err { color: #d1284d; }
 
 /* login */
-.login { max-width: 380px; margin: 12vh auto 0; background: var(--bg-2); border: 1px solid var(--line); border-radius: 20px; padding: 28px; display: grid; gap: 14px; }
-.login h2 { font: 400 24px/1.1 var(--font-display); margin: 0; }
-input, select, textarea { width: 100%; font: 500 15px/1.4 var(--font-body); color: var(--ink); background: var(--bg); border: 1.5px solid var(--line); border-radius: 10px; padding: 10px 12px; }
-input:focus, select:focus, textarea:focus { outline: none; border-color: var(--lilac); }
-.err { color: var(--red); font-size: 14px; min-height: 1.4em; margin: 0; }
-
-/* summary */
-.summary { display: flex; flex-wrap: wrap; gap: 8px; padding-block: 18px; }
-.chip { display: inline-flex; align-items: center; gap: 8px; padding: 8px 12px; border-radius: 999px; border: 1px solid var(--line); background: var(--bg-2); font-weight: 700; font-size: 13.5px; cursor: pointer; }
-.chip b { font-variant-numeric: tabular-nums; color: var(--green); }
-.chip[aria-pressed="true"] { border-color: var(--green); background: rgba(47,227,154,.12); }
-.search { max-width: 280px; }
-
-/* board */
-.board { display: grid; grid-template-columns: repeat(6, minmax(240px, 1fr)); gap: 12px; overflow-x: auto; padding-bottom: 28px; align-items: start; }
-.col { background: var(--bg-2); border: 1px solid var(--line); border-radius: 16px; padding: 10px; display: grid; gap: 10px; min-width: 0; }
-.col h3 { margin: 4px 6px; font: 800 13px/1 var(--font-body); letter-spacing: .08em; text-transform: uppercase; color: var(--muted); display: flex; justify-content: space-between; }
-.col h3 b { color: var(--ink); font-variant-numeric: tabular-nums; }
-.col[data-s="Нова"] h3 { color: var(--green); }
-.col[data-s="Клієнт"] h3 { color: var(--green); }
-.col[data-s="Відмова"] h3 { color: var(--red); }
-.card { background: var(--bg-3); border: 1px solid var(--line); border-radius: 12px; padding: 12px; display: grid; gap: 8px; min-width: 0; }
-.card .top { display: flex; justify-content: space-between; gap: 8px; align-items: baseline; }
-.card .name { font-weight: 800; font-size: 15.5px; overflow-wrap: anywhere; }
-.card .date { color: var(--muted); font-size: 12px; white-space: nowrap; font-variant-numeric: tabular-nums; }
-.card .biz { color: var(--lilac); font-weight: 700; overflow-wrap: anywhere; }
-.card dl { margin: 0; display: grid; grid-template-columns: auto 1fr; gap: 3px 8px; font-size: 13px; }
-.card dt { color: var(--muted); }
-.card dd { margin: 0; overflow-wrap: anywhere; }
-.card a { color: var(--green); }
-.card .pain { font-size: 13px; background: rgba(0,0,0,.2); border-radius: 8px; padding: 8px; overflow-wrap: anywhere; }
-.card textarea { min-height: 54px; font-size: 13.5px; resize: vertical; }
-.card .saved { font-size: 12px; color: var(--green); min-height: 1em; }
-.empty { color: var(--muted); font-size: 13px; padding: 6px; }
-@media (max-width: 760px) { .board { grid-template-columns: 1fr; overflow-x: visible; } }
+.login-wrap { flex: 1; display: grid; place-items: center; padding-block: 40px; background: linear-gradient(135deg, #7b2ff2 0%, var(--violet) 45%, var(--indigo) 100%); }
+.login { width: min(400px, 100%); background: #fff; border-radius: 22px; padding: 30px; display: grid; gap: 12px; box-shadow: 0 30px 60px rgba(18,7,42,.35); }
+.login h2 { margin: 0; font: 400 26px/1.1 var(--font-display); }
+.login p { margin: 0; color: var(--ink-2); font-weight: 600; }
+.login input { width: 100%; border: 2px solid var(--line); border-radius: 12px; padding: 12px 14px; font: 600 15px var(--font-body); }
+.login input:focus { outline: none; border-color: var(--lilac); }
+.login .save { width: 100%; padding: 13px; }
+.toast { position: fixed; left: 50%; bottom: max(20px, env(safe-area-inset-bottom, 0px)); transform: translateX(-50%); background: var(--night); color: #fff; padding: 11px 16px; border-radius: 12px; font-weight: 700; z-index: 60; box-shadow: 0 10px 30px rgba(0,0,0,.3); }
+@media (prefers-reduced-motion: reduce) { .card, .col { transition: none; } }
 </style>
 </head>
 <body>
-<header>
-  <div class="wrap">
-    <img src="img/logo.png" alt="">
-    <h1>Junction CRM</h1>
-    <span class="muted" id="updated"></span>
-    <span class="spacer"></span>
-    <input class="search" id="search" type="search" placeholder="Пошук: ім'я, бізнес, контакт" hidden>
-    <button id="refresh" hidden>Оновити</button>
-    <button id="logout" hidden>Вийти</button>
+<header class="bar px">
+  <img src="img/logo.png" alt="">
+  <h1>Junction CRM</h1>
+  <span class="upd" id="updated"></span>
+  <span class="grow"></span>
+  <div class="seg" id="views" role="group" aria-label="Вигляд" hidden>
+    <button type="button" data-view="board" aria-pressed="true">Канбан</button>
+    <button type="button" data-view="table" aria-pressed="false">Таблиця</button>
   </div>
+  <input class="search" id="search" type="search" placeholder="Пошук: ім'я, бізнес, контакт" hidden>
+  <button class="ghost" id="refresh" type="button" hidden>Оновити</button>
+  <button class="ghost" id="logout" type="button" hidden>Вийти</button>
 </header>
 
-<main class="wrap">
+<div class="login-wrap px" id="loginWrap">
   <form class="login" id="login">
     <h2>Вхід у CRM</h2>
-    <p class="muted">Пароль — це CRM_KEY із властивостей Apps Script.</p>
-    <label for="pass" class="muted">Пароль</label>
+    <p>Пароль — це CRM_KEY із властивостей Apps Script.</p>
+    <label for="pass" class="visually">Пароль</label>
     <input id="pass" type="password" autocomplete="current-password" required>
-    <button class="main" type="submit">Увійти</button>
-    <p class="err" id="loginErr" role="alert"></p>
+    <button class="save" type="submit">Увійти</button>
+    <p class="status-msg err" id="loginErr" role="alert"></p>
   </form>
+</div>
 
-  <div id="app" hidden>
-    <div class="summary" id="summary"></div>
-    <div class="board" id="board"></div>
-  </div>
+<section class="stats px" id="stats" hidden></section>
+<main class="stage px" id="stage" hidden>
+  <div class="board" id="board"></div>
+  <div class="tablewrap" id="tableWrap" hidden></div>
 </main>
+
+<div class="scrim" id="scrim" hidden></div>
+<aside class="drawer" id="drawer" hidden aria-modal="true" role="dialog" aria-labelledby="dName"></aside>
+<div class="toast" id="toast" hidden role="status"></div>
 
 <script src="config.js"></script>
 <script>
@@ -103,108 +172,185 @@ input:focus, select:focus, textarea:focus { outline: none; border-color: var(--l
   var API = window.JUNCTION_ENDPOINT || "";
   var KEY = ""; try { KEY = sessionStorage.getItem("jcrm") || ""; } catch (e) {}
   var STATUSES = ["Нова", "Зв'язались", "Розбір", "Пропозиція", "Клієнт", "Відмова"];
-  var leads = [], filter = "", query = "";
+  var COLORS = { "Нова": "var(--s-new)", "Зв'язались": "var(--s-contact)", "Розбір": "var(--s-audit)", "Пропозиція": "var(--s-offer)", "Клієнт": "var(--s-won)", "Відмова": "var(--s-lost)" };
+  var IN_WORK = ["Зв'язались", "Розбір", "Пропозиція"];
+  var leads = [], query = "", view = "board", sort = { key: "date", dir: "desc" }, openId = null;
+  try { view = localStorage.getItem("jcrm-view") || "board"; } catch (e) {}
   var $ = function (id) { return document.getElementById(id); };
+  var col = function (s) { return COLORS[s] || "var(--lilac)"; };
 
   function call(params) {
     var q = new URLSearchParams(params); q.set("key", KEY);
     return fetch(API + "?" + q.toString()).then(function (r) { return r.json(); });
   }
   function esc(s) { return String(s == null ? "" : s).replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; }); }
-  function contactLink(c) {
-    c = String(c || "").trim();
+  function ago(iso) {
+    var d = new Date(iso); if (isNaN(d)) return "";
+    var m = Math.round((Date.now() - d) / 60000);
+    if (m < 1) return "щойно"; if (m < 60) return m + " хв"; var h = Math.round(m / 60); if (h < 24) return h + " год";
+    var days = Math.round(h / 24); return days < 30 ? days + " дн" : d.toLocaleDateString("uk-UA");
+  }
+  function fullDate(iso) { var d = new Date(iso); return isNaN(d) ? esc(iso) : d.toLocaleString("uk-UA", { day: "2-digit", month: "2-digit", year: "numeric", hour: "2-digit", minute: "2-digit" }); }
+  function source(u) {
+    u = String(u || "direct"); if (u === "direct") return "напряму";
+    var m = /utm_source=([^&]+)/.exec(u); return m ? decodeURIComponent(m[1]) : u;
+  }
+  function contactHtml(c) {
+    c = String(c || "").trim(); if (!c) return "—";
     if (/^@[\w.]{3,}$/.test(c)) return '<a href="https://t.me/' + esc(c.slice(1)) + '" target="_blank" rel="noopener">' + esc(c) + "</a>";
-    if (/^\+?[\d\s()-]{9,}$/.test(c)) return esc(c);
     return esc(c);
   }
-  function siteLink(l) {
+  function linkHtml(l) {
     l = String(l || "").trim(); if (!l) return "—";
     if (/^@[\w.]{2,}$/.test(l)) return '<a href="https://www.instagram.com/' + esc(l.slice(1)) + '/" target="_blank" rel="noopener">' + esc(l) + "</a>";
     if (/^https?:\/\//.test(l)) return '<a href="' + esc(l) + '" target="_blank" rel="noopener">' + esc(l.replace(/^https?:\/\//, "")) + "</a>";
     return esc(l);
   }
-  function fmtDate(iso) {
-    var d = new Date(iso); if (isNaN(d)) return esc(iso);
-    return d.toLocaleDateString("uk-UA", { day: "2-digit", month: "2-digit" }) + " " + d.toLocaleTimeString("uk-UA", { hour: "2-digit", minute: "2-digit" });
-  }
+  function toast(t) { var el = $("toast"); el.textContent = t; el.hidden = false; clearTimeout(toast.h); toast.h = setTimeout(function () { el.hidden = true; }, 2200); }
 
+  /* ---------- data ---------- */
   function load() {
     if (!API) { showLogin("Не вказано адресу Apps Script у config.js."); return; }
     $("refresh").disabled = true;
     call({ action: "list" }).then(function (r) {
       if (!r.ok) { showLogin(r.error === "auth" ? "Неправильний пароль." : "Помилка: " + r.error); return; }
-      leads = r.leads; if (r.statuses) STATUSES = r.statuses;
+      leads = r.leads || []; if (r.statuses) STATUSES = r.statuses;
       showApp(); render();
-      $("updated").textContent = "· оновлено " + new Date().toLocaleTimeString("uk-UA", { hour: "2-digit", minute: "2-digit" });
+      $("updated").textContent = "оновлено о " + new Date().toLocaleTimeString("uk-UA", { hour: "2-digit", minute: "2-digit" });
     }).catch(function () { showLogin("Не вдалося з'єднатися з Apps Script. Перевір адресу в config.js."); })
       .finally(function () { $("refresh").disabled = false; });
   }
-  function showLogin(msg) {
-    $("login").hidden = false; $("app").hidden = true; ["search", "refresh", "logout"].forEach(function (i) { $(i).hidden = true; });
-    $("loginErr").textContent = msg || "";
-  }
-  function showApp() {
-    $("login").hidden = true; $("app").hidden = false; ["search", "refresh", "logout"].forEach(function (i) { $(i).hidden = false; });
-  }
-
-  function render() {
-    var q = query.toLowerCase();
-    var shown = leads.filter(function (l) {
-      return !q || [l.name, l.business, l.contact, l.link, l.utm].join(" ").toLowerCase().indexOf(q) >= 0;
+  function update(id, params) {
+    var l = leads.find(function (x) { return x.id === id; }); if (!l) return Promise.resolve(false);
+    var prev = { status: l.status, comment: l.comment };
+    if (params.status) l.status = params.status;
+    if (params.comment !== undefined) l.comment = params.comment;
+    render(); if (openId === id) openDrawer(id);
+    params.action = "update"; params.id = id;
+    return call(params).then(function (r) { if (!r.ok) throw 0; return true; }).catch(function () {
+      l.status = prev.status; l.comment = prev.comment; render(); if (openId === id) openDrawer(id);
+      toast("Не вдалося зберегти. Спробуй ще раз."); return false;
     });
-    // summary chips double as filters
-    var counts = {}; STATUSES.forEach(function (s) { counts[s] = 0; }); shown.forEach(function (l) { counts[l.status] = (counts[l.status] || 0) + 1; });
-    var won = counts["Клієнт"] || 0, total = shown.length;
-    $("summary").innerHTML = '<button class="chip" data-f="" aria-pressed="' + (filter === "") + '">Усі <b>' + total + "</b></button>" +
-      STATUSES.map(function (s) { return '<button class="chip" data-f="' + esc(s) + '" aria-pressed="' + (filter === s) + '">' + esc(s) + " <b>" + counts[s] + "</b></button>"; }).join("") +
-      '<span class="chip" style="cursor:default">Конверсія в клієнта <b>' + (total ? Math.round(won / total * 100) : 0) + "%</b></span>";
+  }
 
-    var cols = filter ? [filter] : STATUSES;
-    $("board").style.gridTemplateColumns = filter ? "minmax(0, 520px)" : "";
-    $("board").innerHTML = cols.map(function (s) {
-      var items = shown.filter(function (l) { return l.status === s; });
-      return '<section class="col" data-s="' + esc(s) + '"><h3>' + esc(s) + " <b>" + items.length + "</b></h3>" +
-        (items.length ? items.map(card).join("") : '<p class="empty">Порожньо</p>') + "</section>";
+  /* ---------- views ---------- */
+  function showLogin(msg) {
+    $("loginWrap").hidden = false; ["stats", "stage", "views", "search", "refresh", "logout"].forEach(function (i) { $(i).hidden = true; });
+    $("loginErr").textContent = msg || ""; $("pass").focus();
+  }
+  function showApp() { $("loginWrap").hidden = true; ["stats", "stage", "views", "search", "refresh", "logout"].forEach(function (i) { $(i).hidden = false; }); }
+  function filtered() {
+    var q = query.toLowerCase();
+    return leads.filter(function (l) { return !q || [l.name, l.business, l.contact, l.link, l.service, l.utm, l.comment].join(" ").toLowerCase().indexOf(q) >= 0; });
+  }
+  function render() {
+    var list = filtered();
+    var n = function (f) { return list.filter(f).length; };
+    var won = n(function (l) { return l.status === "Клієнт"; });
+    $("stats").innerHTML =
+      stat("Усього заявок", list.length) + stat("Нові", n(function (l) { return l.status === "Нова"; }), true) +
+      stat("У роботі", n(function (l) { return IN_WORK.indexOf(l.status) >= 0; })) + stat("Клієнти", won, true) +
+      stat("Конверсія в клієнта", (list.length ? Math.round(won / list.length * 100) : 0) + "%");
+    document.querySelectorAll("#views button").forEach(function (b) { b.setAttribute("aria-pressed", String(b.dataset.view === view)); });
+    $("board").hidden = view !== "board"; $("tableWrap").hidden = view !== "table";
+    if (view === "board") renderBoard(list); else renderTable(list);
+  }
+  function stat(label, value, hl) { return '<div class="stat' + (hl ? " hl" : "") + '"><span>' + label + "</span><b>" + value + "</b></div>"; }
+
+  function renderBoard(list) {
+    $("board").innerHTML = STATUSES.map(function (s) {
+      var items = list.filter(function (l) { return l.status === s; });
+      return '<section class="col" data-status="' + esc(s) + '" style="--c:' + col(s) + '">' +
+        '<div class="col-head"><span class="dot"></span>' + esc(s) + '<span class="n">' + items.length + "</span></div>" +
+        '<div class="col-body">' + (items.length ? items.map(card).join("") : '<div class="col-empty">Перетягніть сюди</div>') + "</div></section>";
     }).join("");
   }
   function card(l) {
-    return '<article class="card" data-id="' + esc(l.id) + '">' +
-      '<div class="top"><span class="name">' + esc(l.name) + '</span><span class="date">' + fmtDate(l.date) + "</span></div>" +
-      '<div class="biz">' + esc(l.business || "—") + "</div>" +
-      "<dl><dt>Контакт</dt><dd>" + contactLink(l.contact) + "</dd><dt>Профіль</dt><dd>" + siteLink(l.link) + "</dd>" +
-      "<dt>Послуга</dt><dd>" + esc(l.service || "—") + "</dd><dt>Джерело</dt><dd>" + esc(l.utm || "direct") + "</dd></dl>" +
-      (l.pain ? '<div class="pain">' + esc(l.pain) + "</div>" : "") +
-      '<label class="muted" for="st-' + esc(l.id) + '">Статус</label><select id="st-' + esc(l.id) + '" data-act="status">' +
-      STATUSES.map(function (s) { return "<option" + (s === l.status ? " selected" : "") + ">" + esc(s) + "</option>"; }).join("") + "</select>" +
-      '<textarea id="cm-' + esc(l.id) + '" data-act="comment" placeholder="Коментар: про що домовились, коли написати">' + esc(l.comment) + "</textarea>" +
-      '<span class="saved" aria-live="polite"></span></article>';
+    return '<button type="button" class="card" draggable="true" data-id="' + esc(l.id) + '" style="--c:' + col(l.status) + '">' +
+      '<span class="t"><span class="name">' + esc(l.name) + '</span><span class="ago">' + ago(l.date) + "</span></span>" +
+      (l.business ? '<span class="biz">' + esc(l.business) + "</span>" : "") +
+      '<span class="tags">' + (l.service ? '<span class="tag">' + esc(l.service) + "</span>" : "") + '<span class="tag src">' + esc(source(l.utm)) + "</span></span>" +
+      (l.comment ? '<span class="note">' + esc(String(l.comment).slice(0, 70)) + (String(l.comment).length > 70 ? "…" : "") + "</span>" : "") +
+      "</button>";
   }
-  function save(el, params) {
-    var cardEl = el.closest(".card"), id = cardEl.dataset.id, note = cardEl.querySelector(".saved");
-    note.textContent = "Зберігаю…";
-    params.action = "update"; params.id = id;
-    return call(params).then(function (r) {
-      if (!r.ok) throw new Error(r.error);
-      var l = leads.find(function (x) { return x.id === id; });
-      if (params.status) l.status = params.status;
-      if (params.comment !== undefined) l.comment = params.comment;
-      note.textContent = "Збережено";
-      return true;
-    }).catch(function () { note.textContent = "Не збереглося, спробуй ще раз"; note.style.color = "var(--red)"; });
+  function renderTable(list) {
+    var k = sort.key, dir = sort.dir === "asc" ? 1 : -1;
+    var rows = list.slice().sort(function (a, b) {
+      var x = k === "status" ? STATUSES.indexOf(a.status) : String(a[k] || "").toLowerCase();
+      var y = k === "status" ? STATUSES.indexOf(b.status) : String(b[k] || "").toLowerCase();
+      return x < y ? -dir : x > y ? dir : 0;
+    });
+    var th = function (key, label) { return '<th><button type="button" data-sort="' + key + '"' + (sort.key === key ? ' data-dir="' + sort.dir + '"' : "") + ">" + label + "</button></th>"; };
+    $("tableWrap").innerHTML = "<table><thead><tr>" + th("date", "Дата") + th("name", "Ім'я") + th("business", "Бізнес") + "<th>Контакт</th>" +
+      th("service", "Послуга") + "<th>Джерело</th>" + th("status", "Статус") + "</tr></thead><tbody>" +
+      (rows.length ? rows.map(function (l) {
+        return '<tr data-id="' + esc(l.id) + '"><td><span class="muted">' + fullDate(l.date) + "</span></td><td><b>" + esc(l.name) + "</b></td><td>" + esc(l.business || "—") +
+          "</td><td>" + contactHtml(l.contact) + "</td><td>" + esc(l.service || "—") + '</td><td><span class="muted">' + esc(source(l.utm)) +
+          '</span></td><td><span class="badge" style="--c:' + col(l.status) + '">' + esc(l.status) + "</span></td></tr>";
+      }).join("") : '<tr><td colspan="7" class="muted">Заявок поки немає</td></tr>') + "</tbody></table>";
   }
 
-  $("summary").addEventListener("click", function (e) { var b = e.target.closest("[data-f]"); if (!b) return; filter = b.dataset.f; render(); });
-  $("board").addEventListener("change", function (e) {
-    if (e.target.dataset.act === "status") save(e.target, { status: e.target.value }).then(function (ok) { if (ok) setTimeout(render, 400); });
+  /* ---------- drawer ---------- */
+  function openDrawer(id) {
+    var l = leads.find(function (x) { return x.id === id; }); if (!l) return;
+    var keepComment = openId === id && $("dComment") ? $("dComment").value : null;
+    openId = id;
+    var d = $("drawer"); d.style.setProperty("--c", col(l.status));
+    d.innerHTML = '<div class="d-head"><h2 id="dName">' + esc(l.name) + '</h2><div class="biz">' + esc(l.business || "") + '</div><span class="badge" style="--c:' + col(l.status) + '; justify-self:start">' + esc(l.status) + '</span>' +
+      '<button type="button" class="x" id="dClose" aria-label="Закрити">✕</button></div>' +
+      '<div class="d-body">' +
+      '<div class="d-sec"><h3>Статус</h3><div class="pills">' + STATUSES.map(function (s) {
+        return '<button type="button" class="pill" data-status="' + esc(s) + '" style="--c:' + col(s) + '" aria-pressed="' + (s === l.status) + '">' + esc(s) + "</button>"; }).join("") + "</div></div>" +
+      '<div class="d-sec"><h3>Контакти</h3><dl class="info">' +
+        "<dt>Контакт</dt><dd>" + contactHtml(l.contact) + (l.contact ? '<button type="button" class="copy" data-copy="' + esc(l.contact) + '">Копіювати</button>' : "") + "</dd>" +
+        "<dt>Instagram / сайт</dt><dd>" + linkHtml(l.link) + "</dd>" +
+        "<dt>Послуга</dt><dd>" + esc(l.service || "—") + "</dd>" +
+        "<dt>Джерело</dt><dd>" + esc(source(l.utm)) + (l.utm && l.utm !== "direct" ? '<br><span style="color:var(--ink-2);font-size:12.5px">' + esc(l.utm) + "</span>" : "") + "</dd>" +
+        "<dt>Дата</dt><dd>" + fullDate(l.date) + "</dd></dl></div>" +
+      (l.pain ? '<div class="d-sec"><h3>Що болить</h3><div class="pain">' + esc(l.pain) + "</div></div>" : "") +
+      '<div class="d-sec"><h3>Коментар</h3><textarea id="dComment" placeholder="Про що домовились, коли написати знову">' + esc(keepComment != null ? keepComment : l.comment) + '</textarea>' +
+      '<div style="display:flex;gap:12px;align-items:center;margin-top:10px"><button type="button" class="save" id="dSave">Зберегти коментар</button><span class="status-msg" id="dMsg" role="status"></span></div></div>' +
+      "</div>";
+    d.hidden = false; $("scrim").hidden = false;
+  }
+  function closeDrawer() { openId = null; $("drawer").hidden = true; $("scrim").hidden = true; }
+
+  /* ---------- events ---------- */
+  $("board").addEventListener("click", function (e) { var c = e.target.closest(".card"); if (c) openDrawer(c.dataset.id); });
+  $("tableWrap").addEventListener("click", function (e) {
+    var s = e.target.closest("[data-sort]");
+    if (s) { var k = s.dataset.sort; sort = { key: k, dir: sort.key === k && sort.dir === "asc" ? "desc" : "asc" }; render(); return; }
+    if (e.target.closest("a")) return;
+    var tr = e.target.closest("tr[data-id]"); if (tr) openDrawer(tr.dataset.id);
   });
-  $("board").addEventListener("blur", function (e) {
-    if (e.target.dataset.act !== "comment") return;
-    var l = leads.find(function (x) { return x.id === e.target.closest(".card").dataset.id; });
-    if (l && e.target.value !== String(l.comment || "")) save(e.target, { comment: e.target.value });
-  }, true);
+  // drag & drop between columns changes the status
+  var dragId = null;
+  $("board").addEventListener("dragstart", function (e) { var c = e.target.closest(".card"); if (!c) return; dragId = c.dataset.id; c.classList.add("dragging"); e.dataTransfer.effectAllowed = "move"; try { e.dataTransfer.setData("text/plain", dragId); } catch (x) {} });
+  $("board").addEventListener("dragend", function (e) { var c = e.target.closest(".card"); if (c) c.classList.remove("dragging"); document.querySelectorAll(".col.over").forEach(function (x) { x.classList.remove("over"); }); });
+  $("board").addEventListener("dragover", function (e) { var c = e.target.closest(".col"); if (!c || !dragId) return; e.preventDefault(); document.querySelectorAll(".col.over").forEach(function (x) { if (x !== c) x.classList.remove("over"); }); c.classList.add("over"); });
+  $("board").addEventListener("drop", function (e) {
+    var c = e.target.closest(".col"); if (!c || !dragId) return; e.preventDefault(); c.classList.remove("over");
+    var id = dragId, s = c.dataset.status; dragId = null;
+    var l = leads.find(function (x) { return x.id === id; });
+    if (l && l.status !== s) update(id, { status: s }).then(function (ok) { if (ok) toast(l.name + " → " + s); });
+  });
+  $("drawer").addEventListener("click", function (e) {
+    if (e.target.id === "dClose") return closeDrawer();
+    var p = e.target.closest(".pill");
+    if (p && openId) { var id = openId, s = p.dataset.status; update(id, { status: s }).then(function (ok) { if (ok) toast("Статус: " + s); }); return; }
+    var cp = e.target.closest("[data-copy]");
+    if (cp) { var t = cp.dataset.copy; (navigator.clipboard ? navigator.clipboard.writeText(t) : Promise.reject()).then(function () { toast("Скопійовано"); }).catch(function () { toast(t); }); return; }
+    if (e.target.id === "dSave" && openId) {
+      var msg = $("dMsg"); msg.className = "status-msg"; msg.textContent = "Зберігаю…";
+      update(openId, { comment: $("dComment").value }).then(function (ok) { var m = $("dMsg"); if (m) { m.textContent = ok ? "Збережено" : "Не збереглося"; if (!ok) m.classList.add("err"); } });
+    }
+  });
+  $("scrim").addEventListener("click", closeDrawer);
+  document.addEventListener("keydown", function (e) { if (e.key === "Escape" && openId) closeDrawer(); });
+  $("views").addEventListener("click", function (e) { var b = e.target.closest("[data-view]"); if (!b) return; view = b.dataset.view; try { localStorage.setItem("jcrm-view", view); } catch (x) {} render(); });
   $("search").addEventListener("input", function (e) { query = e.target.value; render(); });
   $("refresh").addEventListener("click", load);
-  $("logout").addEventListener("click", function () { KEY = ""; try { sessionStorage.removeItem("jcrm"); } catch (e) {} showLogin(); });
+  $("logout").addEventListener("click", function () { KEY = ""; try { sessionStorage.removeItem("jcrm"); } catch (e) {} closeDrawer(); showLogin(); });
   $("login").addEventListener("submit", function (e) {
     e.preventDefault(); KEY = $("pass").value.trim();
     try { sessionStorage.setItem("jcrm", KEY); } catch (err) {}
