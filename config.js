@@ -1,3 +1,3 @@
 // Адреса Apps Script (Deploy → Web app → URL, закінчується на /exec).
 // Поки порожньо, форма на сайті показує, що ще не підключена.
-window.JUNCTION_ENDPOINT = "";
+window.JUNCTION_ENDPOINT = "https://script.google.com/macros/s/AKfycbxVbyPTtdwzW083cuE6uyEVzZHHWOQQiI_J9W5H6pWqyIDuvOs8kI-W6MF8K147Am43Xg/exec";
