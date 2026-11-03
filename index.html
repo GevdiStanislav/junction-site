@@ -476,7 +476,7 @@ footer small { color: var(--muted); }
         <input type="hidden" id="f-utm" name="utm">
         <label class="hp" for="f-website" aria-hidden="true">Не заповнюйте<input id="f-website" name="website" tabindex="-1" autocomplete="off"></label>
         <button class="btn btn-main" type="submit">Отримати безкоштовний розбір <span class="arr" aria-hidden="true">→</span></button>
-        <p class="consent">Надсилаючи форму, ви погоджуєтеся, що ми зв'яжемося з вами щодо заявки.</p>
+        <p class="consent">Надсилаючи форму, ви погоджуєтеся з <a href="privacy.html">політикою конфіденційності</a> і з тим, що ми зв'яжемося з вами щодо заявки.</p>
         <p class="form-msg" id="formMsg" role="status" aria-live="polite"></p>
       </form>
     </div>
@@ -505,12 +505,14 @@ footer small { color: var(--muted); }
     <nav aria-label="Контакти">
       <a href="https://www.instagram.com/junction_agency/" target="_blank" rel="noopener">Instagram</a>
       <a href="#lead">Залишити заявку</a>
+      <a href="privacy.html">Політика конфіденційності</a>
     </nav>
     <small>© 2026 Junction Agency</small>
   </div>
 </footer>
 
 <script src="config.js"></script>
+<script src="pixel.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <script>
 /* ---------- lead form: sends to the CRM endpoint once it is set (Apps Script URL) ---------- */
