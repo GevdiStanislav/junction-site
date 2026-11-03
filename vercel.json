@@ -1,0 +1,17 @@
+{
+  "cleanUrls": true,
+  "redirects": [
+    {
+      "source": "/",
+      "has": [{ "type": "host", "value": "junction-crm.vercel.app" }],
+      "destination": "/crm",
+      "permanent": false
+    }
+  ],
+  "headers": [
+    {
+      "source": "/crm",
+      "headers": [{ "key": "X-Robots-Tag", "value": "noindex, nofollow" }]
+    }
+  ]
+}
